@@ -145,7 +145,7 @@ pygame.display.set_caption("My Pokedex")
 # Setting different sized font options to be used later for general text and button labels
 large_font = pygame.font.SysFont("comicsansms", 50)
 medium_font = pygame.font.SysFont("comicsansms", 30)
-small_font = pygame.font.SysFont("comicsansms", 15)
+small_font = pygame.font.SysFont("comicsansms", 16)
 
 # Establishing the start screen image
 title_photo = pygame.image.load("pokePics/pokedex-spooky.jpg")
@@ -179,8 +179,6 @@ def create_text_button_adjusted(font_choice, text_color, msg, x, y, hover_color,
     # font_choice is a selection from the global variables for the fonts that I set, describing style and size
     mouse = pygame.mouse.get_pos()
 
-    click = pygame.mouse.get_pressed(3)
-
     button_msg = font_choice.render(msg, True, text_color)
 
     button_width = button_msg.get_width() + (button_msg.get_width() * 0.20)
@@ -192,8 +190,9 @@ def create_text_button_adjusted(font_choice, text_color, msg, x, y, hover_color,
     # The experimental version
     if adjusted_x + button_width > mouse[0] > adjusted_x and y + button_height > mouse[1] > y:
         pygame.draw.rect(screen, hover_color, (adjusted_x, y, button_width, button_height))
-        if click[0] == 1:
-            return True
+        for evnt in pygame.event.get():
+            if evnt.type == pygame.MOUSEBUTTONUP:
+                return True
     else:
         pygame.draw.rect(screen, default_color, (adjusted_x, y, button_width, button_height))
 
@@ -204,8 +203,6 @@ def create_text_button_absolute(font_choice, text_color, msg, x, y, hover_color,
     # font_choice is a selection from the global variables for the fonts that I set, describing style and size
     mouse = pygame.mouse.get_pos()
 
-    click = pygame.mouse.get_pressed(3)
-
     button_msg = font_choice.render(msg, True, text_color)
 
     button_width = button_msg.get_width() + (button_msg.get_width() * 0.20)
@@ -214,8 +211,9 @@ def create_text_button_absolute(font_choice, text_color, msg, x, y, hover_color,
     # The experimental version
     if x + button_width > mouse[0] > x and y + button_height > mouse[1] > y:
         pygame.draw.rect(screen, hover_color, (x, y, button_width, button_height))
-        if click[0] == 1:
-            return True
+        for evnt in pygame.event.get():
+            if evnt.type == pygame.MOUSEBUTTONUP:
+                return True
     else:
         pygame.draw.rect(screen, default_color, (x, y, button_width, button_height))
 
