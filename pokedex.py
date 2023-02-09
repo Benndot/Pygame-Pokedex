@@ -187,18 +187,17 @@ def create_text_button_adjusted(font_choice, text_color, msg, x, y, hover_color,
     button_height = button_msg.get_height() + (button_msg.get_height() * 0.20)
 
     # Experimental
-    true_x_pos = x - (button_width/2)
-    true_y_pos = y
+    adjusted_x = x - (button_width / 2)
 
     # The experimental version
-    if true_x_pos + button_width > mouse[0] > true_x_pos and true_y_pos + button_height > mouse[1] > true_y_pos:
-        pygame.draw.rect(screen, hover_color, (true_x_pos, true_y_pos, button_width, button_height))
+    if adjusted_x + button_width > mouse[0] > adjusted_x and y + button_height > mouse[1] > y:
+        pygame.draw.rect(screen, hover_color, (adjusted_x, y, button_width, button_height))
         if click[0] == 1:
             return True
     else:
-        pygame.draw.rect(screen, default_color, (true_x_pos, true_y_pos, button_width, button_height))
+        pygame.draw.rect(screen, default_color, (adjusted_x, y, button_width, button_height))
 
-    screen.blit(button_msg, (true_x_pos + button_width / 10, true_y_pos + button_height / 10))
+    screen.blit(button_msg, (adjusted_x + button_width / 10, y + button_height / 10))
 
 
 def create_text_button_absolute(font_choice, text_color, msg, x, y, hover_color, default_color):
@@ -212,19 +211,15 @@ def create_text_button_absolute(font_choice, text_color, msg, x, y, hover_color,
     button_width = button_msg.get_width() + (button_msg.get_width() * 0.20)
     button_height = button_msg.get_height() + (button_msg.get_height() * 0.20)
 
-    # Experimental
-    true_x_pos = x
-    true_y_pos = y
-
     # The experimental version
-    if true_x_pos + button_width > mouse[0] > true_x_pos and true_y_pos + button_height > mouse[1] > true_y_pos:
-        pygame.draw.rect(screen, hover_color, (true_x_pos, true_y_pos, button_width, button_height))
+    if x + button_width > mouse[0] > x and y + button_height > mouse[1] > y:
+        pygame.draw.rect(screen, hover_color, (x, y, button_width, button_height))
         if click[0] == 1:
             return True
     else:
-        pygame.draw.rect(screen, default_color, (true_x_pos, true_y_pos, button_width, button_height))
+        pygame.draw.rect(screen, default_color, (x, y, button_width, button_height))
 
-    screen.blit(button_msg, (true_x_pos + button_width / 10, true_y_pos + button_height / 10))
+    screen.blit(button_msg, (x + button_width / 10, y + button_height / 10))
 
 
 def create_button(x, y, width, height, hover_color, default_color):
@@ -362,10 +357,16 @@ def options_menu():
         screen.fill(thistle_green)
         screen.blit(title_text, ((screen_width - title_text.get_width()) / 2, 0))
 
+        music_button = create_text_button_adjusted(medium_font, white, "Toggle Music", screen_width / 1.97,
+                                                   screen_height / 6.5, lightgray, slategray)
+        if music_button:
+            music_toggle()
+
         # Bool declaration
-        music_paused_text = medium_font.render(f"Music Paused = {music_paused}", True, blackish)
+        music_pause_declaration = "Yes" if music_paused else "No"
+        music_paused_text = medium_font.render(f"Music Paused: " + music_pause_declaration, True, blackish)
         bool_text_x = (screen_width - music_paused_text.get_width()) / 2
-        bool_text_y = (screen_height - music_paused_text.get_height()) / 2.6
+        bool_text_y = (screen_height - music_paused_text.get_height()) / 3.8
         screen.blit(music_paused_text, (bool_text_x, bool_text_y))
 
         # Return to start menu button
@@ -375,13 +376,8 @@ def options_menu():
         if return_button:
             main()
 
-        music_button = create_text_button_adjusted(medium_font, white, "Toggle Music", screen_width/1.97,
-                                                   screen_height/7, lightgray, slategray)
-        if music_button:
-            music_toggle()
-
         # Creating the (purely aesthetic) volume setting, including 2 buttons and the volume level display
-        volume_height = screen_height / 4
+        volume_height = screen_height / 2.8
         volume_text = medium_font.render(f"{volume_level}", True, black)
         volume_text_x = (screen_width / 2) - (volume_text.get_width() / 2) + 5
         screen.blit(volume_text, (volume_text_x, volume_height - 10))
@@ -426,7 +422,6 @@ def options_menu():
         current_track_text = small_font.render(f'Current Track: ' + current_track_name, True, blackish)
         screen.blit(current_track_text, (screen_width / 2.8, screen_height / 1.6))
 
-        # Quitting boilerplate code
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
                 pygame.quit()
