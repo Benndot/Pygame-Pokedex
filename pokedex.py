@@ -222,19 +222,6 @@ def create_text_button_absolute(font_choice, text_color, msg, x, y, hover_color,
     screen.blit(button_msg, (x + button_width / 10, y + button_height / 10))
 
 
-def create_button(x, y, width, height, hover_color, default_color):
-    mouse = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed(3)
-
-    # Essentially the below means "if the mouse is positioned within the confines of the button on the screen"
-    if x + width > mouse[0] > x and y + height > mouse[1] > y:
-        pygame.draw.rect(screen, hover_color, (x, y, width, height))
-        if click[0] == 1:
-            return True
-    else:
-        pygame.draw.rect(screen, default_color, (x, y, width, height))
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -295,8 +282,6 @@ def start_screen():
 
 def game_menu():
     title_text = medium_font.render("Main Menu", True, slategray)
-    start_text = medium_font.render("Search Pokemon", True, white)
-    options_text = medium_font.render("Game Options", True, white)
 
     menu_photo_scaled = pygame.transform.scale(menu_photo, (300, 300))
 
@@ -306,23 +291,20 @@ def game_menu():
 
         screen.blit(menu_photo_scaled, ((screen_width - menu_photo_scaled.get_width()) / 2, screen_height / 4))
 
+        nav_height = title_text.get_height() + (screen_height / 12)
+
         # Start button code
-        start_button_width, start_button_height = start_text.get_width() + 50, start_text.get_height() + 20
-        start_text_x, start_text_y = (screen_width - start_text.get_width()) / 4, title_text.get_height() + 50
-        start_button = create_button(start_text_x - start_text.get_width() / 8, start_text_y, start_button_width,
-                                     start_button_height, lightgray, slategray)
-        screen.blit(start_text, (start_text_x, start_text_y))
+        start_x = screen_width / 5
+        start_button = create_text_button_adjusted(medium_font, white, "Search Pokemon", start_x, nav_height,
+                                                    lightgray, slategray)
 
         if start_button:
             pokedex_search()
 
         # Options button code
-        options_button_width, options_button_height = options_text.get_width() + 50, options_text.get_height() + 20
-        options_text_x, options_text_y = (screen_width - options_text.get_width()) / 1.25, \
-            options_text.get_height() + 50
-        options_button = create_button(options_text_x - options_text.get_width() / 8, options_text_y,
-                                       options_button_width, options_button_height, lightgray, slategray)
-        screen.blit(options_text, (options_text_x, options_text_y))
+        options_x = screen_width / 1.25
+        options_button = create_text_button_adjusted(medium_font, white, "Options Menu", options_x, nav_height,
+                                                   lightgray, slategray)
 
         if options_button:
             options_menu()
