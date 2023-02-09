@@ -5,7 +5,6 @@ import re
 import random
 from datetime import date
 
-# This is MY interpretation of the corporate CEO game tutorial
 # TODO: Add more detail to display pages, type sorting, better transition back to main menu
 
 pygame.init()
@@ -625,16 +624,5 @@ def main():
 
 
 if __name__ == "__main__":
-
-    # region_variant_matches = []
-    # for pokem in pokemon_list:
-    #     region_variant_pattern = re.compile(" ")
-    #     search_bool = region_variant_pattern.search(pokem.species_name)
-    #     if search_bool:
-    #         region_variant_matches.append(pokem)
-    #
-    # for pokem in pokemon_list:
-    #     if pokem in region_variant_matches:
-    #         print(pokem.species_name)
 
     main()

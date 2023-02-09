@@ -1,6 +1,6 @@
 # Pygame Project 2.0
 
-This is my return to Pygame a little over a year after the first time that I tried it. I have a more robust coding 
+This is my return to Pygame a little over a year after the first time that I tried it out. I have a more robust coding 
 knowledge now to help me figure out some things that I struggled with back in fall 2021. 
 
 ## The Pokedex 1.2
@@ -15,7 +15,7 @@ This is 1.2.0-ish version of this program, with a bunch of small tweaks includin
     -Incorporation of music and controls for the music (Muting, Pausing, Track Changes)
     -A gallery button in the species display to show alternate forms of Pokemon (assuming they have at least one)
     -Conditional text that labels what those alternate forms are
-    -An easter egg (:0)
+    -An easter egg (shouldn't be too hard to find)
     -Improved language in the code itself for improved readability
 
 #### Features
