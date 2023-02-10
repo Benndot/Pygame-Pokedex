@@ -26,13 +26,36 @@ Version 1.2.1 adds the following:
 
 #### Features
 
-Text searches on Pokemon names to filter lists. 
+This program functions more-or-less like Pokedex from the Pokemon games and anime. 
 
-Dynamic pages for each Pokemon including name, an image, and their typing. 
+It has a sort of front-cover start screen that then navigates to a menu that acts as an intermediary that can take
+you both to the real Pokedex search pages and the options
 
-Backing music, with options to switch tracks, pause, and change the volume level. 
+In the Pokemon search pages, you get a list of Pokemon by their number. Currently it's not their actual Pokedex number,
+but the sequence in which I added them into the program. Each name is also a button that can be clicked to take you
+to that Pokemon's species data page. 
 
-A spooky easter egg. Shouldn't be too hard to find. 
+To the right of the page is a search bar that uses regular expressions to filter down the pool of names. Also on the
+right of the page is a button to return to the navigation menu and another to cycle through pages of Pokemon, as each
+"page" only displays 8 species in order to space things out nicely. 
+
+The Pokemon species' data pages are dynamic and include their species' name, an image, and their typing. Additionally,
+for certain species' who have alternative forms (mega evolutions, gigantamax, etc), there is a gallery button that 
+cycles through each one. 
+
+The program has a musical backdrop consisting of a handful of lighthearted tracks from the games. Which song plays 
+to begin with is random, but can be cycled through in the options menu. The options menu also offers the ability to
+change the music's volume or pause it entirely.
+
+Finally, I have included a spooky easter egg. Shouldn't be too hard to find.
+
+### Documentation
+
+FUNCTION create_text_button
+
+x_adjusted: Takes a boolean value. If True, it will adjust the X position of the button given to take into account
+the size (width) of the button. For example, if one were to give it an X value of screen_width/2, with the adjustment
+the button will end up perfectly centered on the screen. 
 
 ### Todo List / Current Issues / Goals
 
@@ -46,8 +69,6 @@ Feature: Create an options object class to handle all option variables so that g
 Feature: Try to remove as many absolute measurements as possible. It would be cool to have the program be able to scale
 to different screen sizes eventually. 
 
-Feature: Combine the two button functions into one, and allow optional parameters for better control over the shape
-and size of the buttons you can create
 
 Bug: Better align name text in the pokedex search page. The longer the name, the more unaligned proportions become.
 On a related note, to partially fix the problem, I would like to remove the regional variant declaration in Pokemon's

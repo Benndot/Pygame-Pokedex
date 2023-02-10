@@ -15,6 +15,7 @@ clock = pygame.time.Clock()
 music_paused = False
 volume_level = 50
 
+
 def music_toggle():
     global music_paused
     print("The music pausing bool has been toggled")
@@ -23,6 +24,7 @@ def music_toggle():
         mixer.music.pause()
     elif not music_paused:
         mixer.music.unpause()
+
 
 # Music section
 spooky_song = "audio/Pokemon BlueRed - Lavender Town.mp3"
@@ -162,51 +164,30 @@ black = (0, 0, 0)
 
 
 def create_transparent_button(width, height, x, y):
-    mouse = pygame.mouse.get_pos()
 
-    click = pygame.mouse.get_pressed(3)
+    mouse = pygame.mouse.get_pos()
 
     if x + width > mouse[0] > x and y + height > mouse[1] > y:
         s = pygame.Surface((width, height))  # the size of your rect
         s.set_alpha(128)  # alpha level
         s.fill((255, 255, 255))  # this fills the entire surface
         screen.blit(s, (x, y))  # (0,0) are the top-left coordinates
-        if click[0] == 1:
-            return True
-
-
-def create_text_button_adjusted(font_choice, text_color, msg, x, y, hover_color, default_color):
-    # font_choice is a selection from the global variables for the fonts that I set, describing style and size
-    mouse = pygame.mouse.get_pos()
-
-    button_msg = font_choice.render(msg, True, text_color)
-
-    button_width = button_msg.get_width() + (button_msg.get_width() * 0.20)
-    button_height = button_msg.get_height() + (button_msg.get_height() * 0.20)
-
-    # Experimental
-    adjusted_x = x - (button_width / 2)
-
-    # The experimental version
-    if adjusted_x + button_width > mouse[0] > adjusted_x and y + button_height > mouse[1] > y:
-        pygame.draw.rect(screen, hover_color, (adjusted_x, y, button_width, button_height))
         for evnt in pygame.event.get():
             if evnt.type == pygame.MOUSEBUTTONUP:
                 return True
-    else:
-        pygame.draw.rect(screen, default_color, (adjusted_x, y, button_width, button_height))
-
-    screen.blit(button_msg, (adjusted_x + button_width / 10, y + button_height / 10))
 
 
-def create_text_button_absolute(font_choice, text_color, msg, x, y, hover_color, default_color):
-    # font_choice is a selection from the global variables for the fonts that I set, describing style and size
+def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_color, x_adjust: bool):
+
     mouse = pygame.mouse.get_pos()
 
     button_msg = font_choice.render(msg, True, text_color)
 
     button_width = button_msg.get_width() + (button_msg.get_width() * 0.20)
     button_height = button_msg.get_height() + (button_msg.get_height() * 0.20)
+
+    if x_adjust:
+        x = x - (button_width / 2)
 
     # The experimental version
     if x + button_width > mouse[0] > x and y + button_height > mouse[1] > y:
@@ -244,20 +225,20 @@ def start_screen():
         screen.blit(start_text, ((screen_width - start_text.get_width()) / 2, screen_height / 65))
         screen.blit(today_text, (5, 10))
 
-        menu_button = create_text_button_adjusted(small_font, blackish, "Open Menu", screen_width * .9, 12, lightgray,
-                                                  slategray)
+        menu_button = create_text_button(small_font, blackish, "Open Menu", screen_width * .9, 12, lightgray,
+                                         slategray, True)
 
         if menu_button:
             game_menu()
             return
 
-        music_button = create_text_button_adjusted(small_font, blackish, "Toggle Music", screen_width * .8, 12,
-                                                   lightgray, slategray)
+        music_button = create_text_button(small_font, blackish, "Toggle Music", screen_width * .8, 12,
+                                          lightgray, slategray, True)
 
         if music_button:
             music_toggle()
 
-        ghost_button = create_transparent_button(250, 100, screen_width / 1.75, screen_height / 2.5)
+        ghost_button = create_transparent_button(250, 100, screen_width / 1.75, screen_height / 2.6)
 
         if ghost_button:
             print("Ghost button clicked!")
@@ -293,16 +274,16 @@ def game_menu():
 
         # Start button code
         start_x = screen_width / 5
-        start_button = create_text_button_adjusted(medium_font, white, "Search Pokemon", start_x, nav_height,
-                                                    lightgray, slategray)
+        start_button = create_text_button(medium_font, white, "Search Pokemon", start_x, nav_height,
+                                          lightgray, slategray, True)
 
         if start_button:
             pokedex_search()
 
         # Options button code
         options_x = screen_width / 1.25
-        options_button = create_text_button_adjusted(medium_font, white, "Options Menu", options_x, nav_height,
-                                                   lightgray, slategray)
+        options_button = create_text_button(medium_font, white, "Options Menu", options_x, nav_height,
+                                            lightgray, slategray, True)
 
         if options_button:
             options_menu()
@@ -337,8 +318,8 @@ def options_menu():
         screen.fill(thistle_green)
         screen.blit(title_text, ((screen_width - title_text.get_width()) / 2, 0))
 
-        music_button = create_text_button_adjusted(medium_font, white, "Toggle Music", screen_width / 1.97,
-                                                   screen_height / 6.5, lightgray, slategray)
+        music_button = create_text_button(medium_font, white, "Toggle Music", screen_width / 1.97,
+                                          screen_height / 6.5, lightgray, slategray, True)
         if music_button:
             music_toggle()
 
@@ -350,8 +331,8 @@ def options_menu():
         screen.blit(music_paused_text, (bool_text_x, bool_text_y))
 
         # Return to start menu button
-        return_button = create_text_button_adjusted(medium_font, white, "Return To Start", screen_width / 2,
-                                                    screen_height / 1.25, slategray, lightgray)
+        return_button = create_text_button(medium_font, white, "Return To Start", screen_width / 2,
+                                           screen_height / 1.25, slategray, lightgray, True)
 
         if return_button:
             main()
@@ -362,11 +343,11 @@ def options_menu():
         volume_text_x = (screen_width / 2) - (volume_text.get_width() / 2) + 5
         screen.blit(volume_text, (volume_text_x, volume_height - 10))
 
-        volume_up_button = create_text_button_adjusted(small_font, white, "Volume +", screen_width / 2.25,
-                                                       volume_height, slategray, lightgray)
+        volume_up_button = create_text_button(small_font, white, "Volume +", screen_width / 2.25,
+                                              volume_height, slategray, lightgray, True)
 
-        volume_down_button = create_text_button_adjusted(small_font, white, "Volume -", screen_width / 1.75,
-                                                         volume_height, slategray, lightgray)
+        volume_down_button = create_text_button(small_font, white, "Volume -", screen_width / 1.75,
+                                                volume_height, slategray, lightgray, True)
 
         if volume_up_button:
             print("volume increased!")
@@ -385,8 +366,8 @@ def options_menu():
             muted_text = medium_font.render("(muted)", True, thunderbird_red)
             screen.blit(muted_text, (volume_text_x * .92, volume_height + 25))
 
-        music_changer = create_text_button_adjusted(large_font, white, "Change Music Track", screen_width / 2,
-                                                    screen_height / 2.2, slategray, lightgray)
+        music_changer = create_text_button(large_font, white, "Change Music Track", screen_width / 2,
+                                           screen_height / 2.2, slategray, lightgray, True)
 
         if music_changer:
             print("Track change initiated")
@@ -444,8 +425,8 @@ def pokedex_search():
                 search_matches.append(poke)
 
         # Button to cycle through Pokédex pages
-        cycle_button = create_text_button_adjusted(medium_font, white, "Next Page", screen_width - 150, 600, slategray,
-                                                   lightgray)
+        cycle_button = create_text_button(medium_font, white, "Next Page", screen_width - 150, 600, slategray,
+                                          lightgray, True)
 
         if cycle_button:
             poke_index_tracker += 8
@@ -453,8 +434,8 @@ def pokedex_search():
                 poke_index_tracker = 0
 
         # Return to start menu button
-        return_button = create_text_button_adjusted(medium_font, white, "Return To Menu", screen_width - 150, 10,
-                                                    slategray, lightgray)
+        return_button = create_text_button(medium_font, white, "Return To Menu", screen_width - 150, 10,
+                                           slategray, lightgray, True)
 
         if return_button:
             return_to_screen(game_menu)
@@ -462,8 +443,8 @@ def pokedex_search():
         species_name_height = 85
         for index, poke in enumerate(search_matches[poke_index_tracker:], poke_index_tracker+1):
             if species_name_height <= 680:
-                poke_button = create_text_button_absolute(medium_font, white, f"{index}. {poke.species_name}", 75,
-                                                          species_name_height, slategray, slategray)
+                poke_button = create_text_button(medium_font, white, f"{index}. {poke.species_name}", 75,
+                                                 species_name_height, slategray, slategray, False)
                 species_name_height += 75
 
                 if poke_button:
@@ -522,8 +503,8 @@ def species_display(active_pokemon: PokemonSpecies):
 
         screen.blit(pokemon_image, ((screen_width - 400) / 2, (screen_height - 400) / 2))
 
-        return_button = create_text_button_adjusted(medium_font, white, "Return To Menu", screen_width * 0.85,
-                                                    screen_height * 0.02, slategray, lightgray)
+        return_button = create_text_button(medium_font, white, "Return To Menu", screen_width * 0.85,
+                                           screen_height * 0.02, slategray, lightgray, True)
 
         screen.blit(type_primary_text, (screen_width / 3.2, 625))
         screen.blit(type_secondary_text, (screen_width / 1.8, 625))
@@ -531,8 +512,8 @@ def species_display(active_pokemon: PokemonSpecies):
         if return_button:
             return_to_screen(pokedex_search)  # Clicking activates a second button through screen
 
-        gallery_button = create_text_button_adjusted(medium_font, white, "Gallery", screen_width * 0.08,
-                                                    screen_height * 0.02, slategray, lightgray)
+        gallery_button = create_text_button(medium_font, white, "Gallery", screen_width * 0.08,
+                                            screen_height * 0.02, slategray, lightgray, True)
 
         if gallery_button and len(active_pokemon.alt) > 1:
             gallery_index += 1
