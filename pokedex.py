@@ -424,6 +424,13 @@ def pokedex_search():
             if search_bool:
                 search_matches.append(poke)
 
+        # Return to start menu button
+        return_button = create_text_button(medium_font, white, "Return To Menu", screen_width - 150, 10,
+                                           slategray, lightgray, True)
+
+        if return_button:
+            return_to_screen(game_menu)
+
         # Button to cycle through Pokédex pages
         cycle_button = create_text_button(medium_font, white, "Next Page", screen_width - 150, 600, slategray,
                                           lightgray, True)
@@ -432,13 +439,6 @@ def pokedex_search():
             poke_index_tracker += 8
             if poke_index_tracker >= len(search_matches):
                 poke_index_tracker = 0
-
-        # Return to start menu button
-        return_button = create_text_button(medium_font, white, "Return To Menu", screen_width - 150, 10,
-                                           slategray, lightgray, True)
-
-        if return_button:
-            return_to_screen(game_menu)
 
         species_name_height = 85
         for index, poke in enumerate(search_matches[poke_index_tracker:], poke_index_tracker+1):
@@ -503,7 +503,7 @@ def species_display(active_pokemon: PokemonSpecies):
 
         screen.blit(pokemon_image, ((screen_width - 400) / 2, (screen_height - 400) / 2))
 
-        return_button = create_text_button(medium_font, white, "Return To Menu", screen_width * 0.85,
+        return_button = create_text_button(medium_font, white, "Return To Search", screen_width * 0.85,
                                            screen_height * 0.02, slategray, lightgray, True)
 
         screen.blit(type_primary_text, (screen_width / 3.2, 625))
