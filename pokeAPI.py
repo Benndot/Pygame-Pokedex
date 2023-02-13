@@ -26,7 +26,26 @@ def get_data(api_url):
 
 screen_width = 1080
 screen_height = 720
-screen = pygame.display.set_mode((screen_width, screen_height))
+screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+
+
+def resize_screen():
+    global screen
+    global screen_width
+    global screen_height
+    if screen_width == 1080:
+        screen_width = 1600
+        screen_height = 900
+        screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+    elif screen_width == 1600:
+        screen_width = 1920
+        screen_height = 1080
+        screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+    else:
+        screen_width = 1080
+        screen_height = 720
+        screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+
 
 # Setting different sized font options to be used later for general text and button labels
 large_font = pygame.font.SysFont("comicsansms", 50)
@@ -43,7 +62,32 @@ thistle_green = (210, 210, 190)
 black = (0, 0, 0)
 
 
+def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_color, x_adjust: bool):
+
+    mouse = pygame.mouse.get_pos()
+
+    button_msg = font_choice.render(msg, True, text_color)
+
+    button_width = button_msg.get_width() + (button_msg.get_width() * 0.20)
+    button_height = button_msg.get_height() + (button_msg.get_height() * 0.20)
+
+    if x_adjust:
+        x = x - (button_width / 2)
+
+    # The experimental version
+    if x + button_width > mouse[0] > x and y + button_height > mouse[1] > y:
+        pygame.draw.rect(screen, hover_color, (x, y, button_width, button_height))
+        for evnt in pygame.event.get():
+            if evnt.type == pygame.MOUSEBUTTONUP:
+                return True
+    else:
+        pygame.draw.rect(screen, default_color, (x, y, button_width, button_height))
+
+    screen.blit(button_msg, (x + button_width / 10, y + button_height / 10))
+
+
 def pokemon_display():
+
     start_text = medium_font.render("Pygame Pokedex (Powered by PokeAPI)", True, white)
 
     top_bar_height = screen_height / 10
@@ -84,6 +128,12 @@ def pokemon_display():
         screen.blit(pokemon_name_text, ((screen_width - pokemon_name_text.get_width())/2, screen_height / 10))
 
         screen.blit(poke_photo, ((screen_width - poke_photo.get_width()) / 2, top_bar_height))
+
+        resize_button = create_text_button(large_font, thunderbird_red, "Resize", screen_width / 2, screen_height * 0.8,
+                                           blackish, black, True)
+
+        if resize_button:
+            resize_screen()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
