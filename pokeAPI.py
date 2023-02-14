@@ -98,13 +98,20 @@ def pokemon_display():
     try:
         pokemon_obj = get_data(f"https://pokeapi.co/api/v2/pokemon/{random_pokemon_index}")
         screen_background_image_url = pokemon_obj["sprites"]["front_default"]
-        pokemon_name_string = pokemon_obj["name"]
+        pokemon_name_string = pokemon_obj["name"].title()
         pokemon_name_text = large_font.render(pokemon_name_string, True, white)
+        pokemon_type1_string = pokemon_obj["types"][0]["type"]["name"].title()
+        pokemon_type1_text = large_font.render(pokemon_type1_string, True, white)
+        pokemon_type2_string = pokemon_obj["types"][1]["type"]["name"] if not IndexError else "n/a"
+        pokemon_type2_text = large_font.render(pokemon_type2_string, True, white)
+
     except TypeError:
         print("There was an error, deploying placeholders")
         screen_background_image_url = "https://avatars.githubusercontent.com/u/32001362?v=4"
         pokemon_name_string = "Error / Pokemon Not Found"
         pokemon_name_text = large_font.render(pokemon_name_string, True, white)
+        pokemon_type1_text = large_font.render("N/A", True, white)
+        pokemon_type2_text = large_font.render("N/A", True, white)
 
     screen_background_image_string = urlopen(screen_background_image_url).read()
 
@@ -118,19 +125,25 @@ def pokemon_display():
     print(screen_background_image.get_width(), screen_background_image.get_height())
 
     # Scales the start screen image to the screen size
-    poke_photo = pygame.transform.scale(screen_background_image, (screen_width / 2, screen_width / 2))
+    poke_photo = pygame.transform.scale(screen_background_image, (screen_width / 2.5, screen_width / 2.5))
 
     while True:
 
         screen.fill(slategray)
-        screen.blit(start_text, ((screen_width - start_text.get_width()) / 2, screen_height / 65))
 
-        screen.blit(pokemon_name_text, ((screen_width - pokemon_name_text.get_width())/2, screen_height / 10))
+        screen.blit(pokemon_name_text, ((screen_width - pokemon_name_text.get_width())/2, screen_height / 25))
 
         screen.blit(poke_photo, ((screen_width - poke_photo.get_width()) / 2, top_bar_height))
 
-        resize_button = create_text_button(large_font, thunderbird_red, "Resize", screen_width / 2, screen_height * 0.8,
-                                           blackish, black, True)
+        screen.blit(pokemon_type1_text, ((screen_width - pokemon_type1_text.get_width())/2, screen_height * 0.7))
+
+        try:
+            screen.blit(pokemon_type2_text, ((screen_width - pokemon_type1_text.get_width()) / 2, screen_height * 0.8))
+        except UnboundLocalError:
+            pass
+
+        resize_button = create_text_button(large_font, thunderbird_red, "Resize", screen_width / 10,
+                                           screen_height * 0.8, blackish, black, True)
 
         if resize_button:
             resize_screen()
@@ -162,10 +175,9 @@ if __name__ == "__main__":
     # print(get_data(placeholder_url), type(get_data(placeholder_url)))
     # print(get_data(placeholder_url)["title"])
 
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
+    print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["sprites"].keys())
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["sprites"]["front_default"])
 
-    print(get_data("https://pokeapi.co/api/v2/pokemon/pikachu")["name"])
+    # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
 
     main()
