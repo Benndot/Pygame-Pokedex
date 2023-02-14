@@ -9,9 +9,6 @@ pygame.init()
 
 clock = pygame.time.Clock()
 
-placeholder_url = 'https://jsonplaceholder.typicode.com/todos/1'
-
-
 # you can access PokeAPI both by the Pokemon species' name and by their national Pokédex number
 
 
@@ -88,18 +85,15 @@ def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_
 
 def pokemon_display():
 
-    start_text = medium_font.render("Pygame Pokedex (Powered by PokeAPI)", True, white)
-
     top_bar_height = screen_height / 10
 
     random_pokemon_index = random.randint(1, 800)
-    print(random_pokemon_index)
 
     try:
         pokemon_obj = get_data(f"https://pokeapi.co/api/v2/pokemon/{random_pokemon_index}")
         screen_background_image_url = pokemon_obj["sprites"]["front_default"]
-        pokemon_name_string = pokemon_obj["name"].title()
-        pokemon_name_text = large_font.render(pokemon_name_string, True, white)
+        pokemon_name_string, pokemon_id_number = pokemon_obj["name"].title(), pokemon_obj["id"]
+        pokemon_name_text = large_font.render(f"#{pokemon_id_number}. {pokemon_name_string}", True, white)
         pokemon_type1_string = pokemon_obj["types"][0]["type"]["name"].title()
         pokemon_type1_text = large_font.render(pokemon_type1_string, True, white)
         pokemon_type2_string = pokemon_obj["types"][1]["type"]["name"] if not IndexError else "n/a"
@@ -131,22 +125,25 @@ def pokemon_display():
 
         screen.fill(slategray)
 
-        screen.blit(pokemon_name_text, ((screen_width - pokemon_name_text.get_width())/2, screen_height / 25))
+        screen.blit(pokemon_name_text, ((screen_width - pokemon_name_text.get_width())/2, screen_height / 30))
 
-        screen.blit(poke_photo, ((screen_width - poke_photo.get_width()) / 2, top_bar_height))
+        screen.blit(poke_photo, ((screen_width - poke_photo.get_width()) / 2, top_bar_height * 1.1))
 
         screen.blit(pokemon_type1_text, ((screen_width - pokemon_type1_text.get_width())/2, screen_height * 0.7))
 
-        try:
-            screen.blit(pokemon_type2_text, ((screen_width - pokemon_type1_text.get_width()) / 2, screen_height * 0.8))
-        except UnboundLocalError:
-            pass
+        screen.blit(pokemon_type2_text, ((screen_width - pokemon_type1_text.get_width()) / 2, screen_height * 0.8))
 
-        resize_button = create_text_button(large_font, thunderbird_red, "Resize", screen_width / 10,
-                                           screen_height * 0.8, blackish, black, True)
+        resize_button = create_text_button(medium_font, thunderbird_red, "Resize", screen_width / 90,
+                                           screen_height * 0.85, blackish, black, False)
 
         if resize_button:
             resize_screen()
+
+        randomize_button = create_text_button(medium_font, thunderbird_red, "Randomize", screen_width / 90,
+                                              screen_height * 0.75, blackish, black, False)
+
+        if randomize_button:
+            pokemon_display()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
@@ -172,12 +169,9 @@ def main():
 
 
 if __name__ == "__main__":
-    # print(get_data(placeholder_url), type(get_data(placeholder_url)))
-    # print(get_data(placeholder_url)["title"])
 
-    print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
+    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["sprites"].keys())
-
     # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
 
     main()
