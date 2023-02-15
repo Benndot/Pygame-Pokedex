@@ -17,6 +17,9 @@ class MusicSettings:
 
     volume_level = 50
     music_paused = False
+    spooky_song = "audio/Pokemon BlueRed - Lavender Town.mp3"
+    tracklist = ["audio/Pokemon Ruby- Littleroot Town.mp3", "audio/Pokemon Ruby- Route 101.mp3",
+                 "audio/Pokemon Ruby- Route 104.mp3"]
 
     def music_toggle(self):
         print("The music pausing bool has been toggled")
@@ -29,15 +32,16 @@ class MusicSettings:
     def change_music_volume(self):
         print(self.volume_level)
 
+    def randomize_song(self):
+        selected_track = random.choice(self.tracklist)
+        mixer.music.load(selected_track)
+        mixer.music.set_volume(MusicSettings.volume_level / 350)
+        mixer.music.play(-1)
 
-spooky_song = "audio/Pokemon BlueRed - Lavender Town.mp3"
-tracklist = ["audio/Pokemon Ruby- Littleroot Town.mp3", "audio/Pokemon Ruby- Route 101.mp3",
-             "audio/Pokemon Ruby- Route 104.mp3"]
-tracklist_index = random.randint(0, len(tracklist) - 1)
+
 mixer.init()
-mixer.music.load(tracklist[tracklist_index])
-mixer.music.set_volume(MusicSettings.volume_level/350)
-mixer.music.play(-1)
+music_object = MusicSettings()
+music_object.randomize_song()
 
 
 def get_data(api_url):
@@ -134,11 +138,17 @@ def pokemon_search():
         if randomize_button:
             pokemon_display()
 
-        return_button = create_text_button(medium_font, white, "Return", screen_width * .85,
+        return_button = create_text_button(medium_font, white, "Return", screen_width * .87,
                                            screen_height * 0.85, (0, 200, 0), green, False)
 
         if return_button:
             print("return")
+
+        music_toggle = create_text_button(medium_font, white, "Toggle Music", screen_width * .775,
+                                          screen_height * 0.75, (0, 200, 0), green, False)
+
+        if music_toggle:
+            music_object.music_toggle()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
