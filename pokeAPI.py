@@ -45,19 +45,19 @@ class MusicSettings:
         mixer.music.set_volume(MusicSettings.volume_level / 350)
         mixer.music.play(-1)
 
+    def cycle_track(self):
+        mixer.music.stop()
+        self.current_track_index += 1
+        if self.current_track_index >= len(self.tracklist):
+            self.current_track_index = 0
+        mixer.music.load(self.tracklist[self.current_track_index])
+        mixer.music.set_volume(self.volume_level / 350)
+        mixer.music.play(-1)
+
 
 mixer.init()
 music_object = MusicSettings()
 music_object.randomize_song()
-
-
-def get_data(api_url):
-    response = requests.get(api_url)
-    if response.status_code == 200:
-        print("sucessfully fetched the data")
-        return response.json()
-    else:
-        print(f"Hello person, there's a {response.status_code} error with your request")
 
 
 class GameScreen:
@@ -81,6 +81,15 @@ class GameScreen:
 
 
 game_screen = GameScreen()
+
+
+def get_data(api_url):
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        print("successfully fetched the data")
+        return response.json()
+    else:
+        print(f"Hello person, there's a {response.status_code} error with your request")
 
 
 # Setting different sized font options to be used later for general text and button labels
@@ -220,13 +229,7 @@ def options_menu():
 
         if music_changer:
             print("Track change initiated")
-            mixer.music.stop()
-            music_object.current_track_index += 1
-            if music_object.current_track_index >= len(music_object.tracklist):
-                music_object.current_track_index = 0
-            mixer.music.load(music_object.tracklist[music_object.current_track_index])
-            mixer.music.set_volume(music_object.volume_level/350)
-            mixer.music.play(-1)
+            music_object.cycle_track()
 
         current_track_name = music_object.tracklist[music_object.current_track_index][6:-4] if \
             music_object.current_track_index != 13 else "    ????????????????????"
