@@ -89,7 +89,7 @@ Create a function to quickly set text and blit it to the screen, like I have wit
 
 Add more data to the Pokemon display pages
 
-Create lists to dynamically display Pokemon name buttons for the user
-
 Find a way to allow the user to filter through the list of Pokemon
+
+Make font sizes proportional rather than absolute
 

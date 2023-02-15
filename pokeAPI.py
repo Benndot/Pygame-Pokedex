@@ -125,7 +125,7 @@ small_font = pygame.font.SysFont("comicsansms", 16)
 # Establishing a number of reusable rgb values for several colors
 slategray = (112, 128, 144)
 lightgray = (165, 175, 185)
-blackish = (10, 10, 10)
+blackish = (20, 20, 20)
 thunderbird_red = (200, 15, 25)
 white = (255, 255, 255)
 green = (0, 255, 0)
@@ -176,26 +176,32 @@ def pokemon_search():
         multi_factor = 1
         pokedex.d_count = 0
         for poke in pokemon_list_object["results"]:
-            pokemon_name_text = sml_med_font.render(f"{poke['name']}", True, black)
-            game_screen.screen.blit(pokemon_name_text, (game_screen.screen_width/3.5, pokemon_name_height*multi_factor))
+
+            poke_button = create_text_button(sml_med_font, white, f"{poke['name']}", game_screen.screen_width/3.5,
+                                             pokemon_name_height*multi_factor, blackish, black, False)
+            if poke_button:
+                print(f"{poke['name']}")
+                pokemon_display(poke['url'])
+
             pokedex.d_count += 1
             multi_factor += 0.75
+
             if pokedex.d_count >= pokedex.d_limit:
                 break
 
-        next_button = create_text_button(medium_font, thunderbird_red, "Next", game_screen.screen_width / 90,
-                                         game_screen.screen_height * 0.85, blackish, black, False)
+        next_button = create_text_button(medium_font, white, "Next", game_screen.screen_width / 90,
+                                         game_screen.screen_height * 0.80, green, black, False)
 
         if next_button:
             pokedex.o_count += 9
 
-        resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.screen_width / 90,
-                                           game_screen.screen_height * 0.92, blackish, black, False)
+        resize_button = create_text_button(sml_med_font, thunderbird_red, "Resize", game_screen.screen_width / 90,
+                                           game_screen.screen_height * 0.95, blackish, black, False)
 
         if resize_button:
             game_screen.resize_screen()
 
-        randomize_button = create_text_button(medium_font, thunderbird_red, "Randomize", game_screen.screen_width / 90,
+        randomize_button = create_text_button(sml_med_font, thunderbird_red, "Randomize", game_screen.screen_width / 90,
                                               game_screen.screen_height * 0, blackish, black, False)
 
         if randomize_button:
