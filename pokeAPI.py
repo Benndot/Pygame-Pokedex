@@ -83,6 +83,17 @@ class GameScreen:
 game_screen = GameScreen()
 
 
+class Pokedex:
+
+    def __init__(self, display_counter: int, display_limit: int, offset_counter: int):
+        self.d_count = display_counter
+        self.d_limit = display_limit
+        self.o_count = offset_counter
+
+
+pokedex = Pokedex(0, 9, 0)
+
+
 class CurrentPokemon:
     def __init__(self, dex_no, name, image_url, type1, type2):
         self.dex_no = dex_no
@@ -99,7 +110,6 @@ current_pokemon = CurrentPokemon(-1, "Placeholder", "https://avatars.githubuserc
 def get_data(api_url):
     response = requests.get(api_url)
     if response.status_code == 200:
-        print("successfully fetched the data")
         return response.json()
     else:
         print(f"Hello person, there's a {response.status_code} error with your request")
@@ -107,7 +117,9 @@ def get_data(api_url):
 
 # Setting different sized font options to be used later for general text and button labels
 large_font = pygame.font.SysFont("comicsansms", 50)
+intermediate_font = pygame.font.SysFont("comicsansms", 40)
 medium_font = pygame.font.SysFont("comicsansms", 30)
+sml_med_font = pygame.font.SysFont("comicsansms", 24)
 small_font = pygame.font.SysFont("comicsansms", 16)
 
 # Establishing a number of reusable rgb values for several colors
@@ -149,20 +161,42 @@ def pokemon_search():
 
     header_text = large_font.render("Pokedex Search", True, black)
 
+    pokedex.o_count = 0
+
     while True:
+
+        pokemon_list_object = get_data(f"https://pokeapi.co/api/v2/pokemon?offset={pokedex.o_count}&limit="
+                                       f"{pokedex.d_limit}")
 
         game_screen.screen.fill(thistle_green)
 
         game_screen.screen.blit(header_text, ((game_screen.screen_width - header_text.get_width())/2, 0))
 
+        pokemon_name_height = game_screen.screen_height * 0.13
+        multi_factor = 1
+        pokedex.d_count = 0
+        for poke in pokemon_list_object["results"]:
+            pokemon_name_text = sml_med_font.render(f"{poke['name']}", True, black)
+            game_screen.screen.blit(pokemon_name_text, (game_screen.screen_width/3.5, pokemon_name_height*multi_factor))
+            pokedex.d_count += 1
+            multi_factor += 0.75
+            if pokedex.d_count >= pokedex.d_limit:
+                break
+
+        next_button = create_text_button(medium_font, thunderbird_red, "Next", game_screen.screen_width / 90,
+                                         game_screen.screen_height * 0.85, blackish, black, False)
+
+        if next_button:
+            pokedex.o_count += 9
+
         resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.screen_width / 90,
-                                           game_screen.screen_height * 0.85, blackish, black, False)
+                                           game_screen.screen_height * 0.92, blackish, black, False)
 
         if resize_button:
             game_screen.resize_screen()
 
         randomize_button = create_text_button(medium_font, thunderbird_red, "Randomize", game_screen.screen_width / 90,
-                                              game_screen.screen_height * 0.75, blackish, black, False)
+                                              game_screen.screen_height * 0, blackish, black, False)
 
         if randomize_button:
             pokemon_display_random()
@@ -214,7 +248,6 @@ def options_menu():
         bool_text_y = (game_screen.screen_height - music_paused_text.get_height()) / 3.8
         game_screen.screen.blit(music_paused_text, (bool_text_x, bool_text_y))
 
-        # Creating the (purely aesthetic) volume setting, including 2 buttons and the volume level display
         volume_height = game_screen.screen_height / 2.8
         volume_text = medium_font.render(f"{music_object.volume_level}", True, black)
         volume_text_x = (game_screen.screen_width / 2) - (volume_text.get_width() / 2) + 5
@@ -362,18 +395,22 @@ def main():
 
 if __name__ == "__main__":
 
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
+    print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["sprites"].keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
 
-    pokemon_list_object = get_data("https://pokeapi.co/api/v2/pokemon")
+    # pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
+    # print(pokemon_list_object2["next"])
     # print(pokemon_list_object["results"][2])
 
     # for poke in pokemon_list_object["results"]:
     #     print(poke["name"])
 
-    pokemon_list_object = get_data(pokemon_list_object["next"])
+    # pokemon_list_object = get_data(pokemon_list_object["next"])
 
-    print(pokemon_list_object)
+    pokemon_list_object2 = get_data(f"https://pokeapi.co/api/v2/pokemon?offset={pokedex.o_count}&limit="
+                                    f"{pokedex.d_limit}")
+
+    print(pokemon_list_object2)
 
     main()
