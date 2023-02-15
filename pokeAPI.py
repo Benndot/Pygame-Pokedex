@@ -18,6 +18,7 @@ class MusicSettings:
     volume_level = 50
     music_paused = False
     spooky_song = "audio/Pokemon BlueRed - Lavender Town.mp3"
+    current_track_index = 0
     tracklist = ["audio/Pokemon Ruby- Littleroot Town.mp3", "audio/Pokemon Ruby- Route 101.mp3",
                  "audio/Pokemon Ruby- Route 104.mp3"]
 
@@ -33,8 +34,9 @@ class MusicSettings:
         print(self.volume_level)
 
     def randomize_song(self):
-        selected_track = random.choice(self.tracklist)
-        mixer.music.load(selected_track)
+        self.current_track_index = random.randint(0, len(self.tracklist)-1)
+        print(f"Index chosen: {self.current_track_index}")
+        mixer.music.load(self.tracklist[self.current_track_index])
         mixer.music.set_volume(MusicSettings.volume_level / 350)
         mixer.music.play(-1)
 
