@@ -83,6 +83,19 @@ class GameScreen:
 game_screen = GameScreen()
 
 
+class CurrentPokemon:
+    def __init__(self, dex_no, name, image_url, type1, type2):
+        self.dex_no = dex_no
+        self.name = name
+        self.image_url = image_url
+        self.type1 = type1
+        self.type2 = type2
+
+
+current_pokemon = CurrentPokemon(-1, "Placeholder", "https://avatars.githubusercontent.com/u/32001362?v=4", "N/A",
+                                 "N/A")
+
+
 def get_data(api_url):
     response = requests.get(api_url)
     if response.status_code == 200:
@@ -260,23 +273,22 @@ def pokemon_display_random():
 
     try:
         pokemon_obj = get_data(f"https://pokeapi.co/api/v2/pokemon/{random_pokemon_index}")
-        screen_background_image_url = pokemon_obj["sprites"]["front_default"]
-        pokemon_name_string, pokemon_id_number = pokemon_obj["name"].title(), pokemon_obj["id"]
-        pokemon_name_text = large_font.render(f"#{pokemon_id_number}. {pokemon_name_string}", True, white)
-        pokemon_type1_string = pokemon_obj["types"][0]["type"]["name"].title()
-        pokemon_type1_text = large_font.render(pokemon_type1_string, True, white)
-        pokemon_type2_string = pokemon_obj["types"][1]["type"]["name"] if not IndexError else "n/a"
-        pokemon_type2_text = large_font.render(pokemon_type2_string, True, white)
+        current_pokemon.image_url = pokemon_obj["sprites"]["front_default"]
+        current_pokemon.name, current_pokemon.dex_no = pokemon_obj["name"].title(), pokemon_obj["id"]
+        current_pokemon.type1 = pokemon_obj["types"][0]["type"]["name"].title()
+        current_pokemon.type2 = "n/a"
+        try:
+            current_pokemon.type2 = pokemon_obj["types"][1]["type"]["name"].title()
+        except IndexError:
+            pass
 
     except TypeError:
         print("There was an error, deploying placeholders")
-        screen_background_image_url = "https://avatars.githubusercontent.com/u/32001362?v=4"
-        pokemon_name_string = "Error / Pokemon Not Found"
-        pokemon_name_text = large_font.render(pokemon_name_string, True, white)
-        pokemon_type1_text = large_font.render("N/A", True, white)
-        pokemon_type2_text = large_font.render("N/A", True, white)
 
-    screen_background_image_string = urlopen(screen_background_image_url).read()
+    pokemon_name_text = large_font.render(f"#{current_pokemon.dex_no}. {current_pokemon.name}", True, white)
+    pokemon_type1_text = large_font.render(f"Type 1:    {current_pokemon.type1}", True, white)
+    pokemon_type2_text = large_font.render(f"Type 2:    {current_pokemon.type2}", True, white)
+    screen_background_image_string = urlopen(current_pokemon.image_url).read()
 
     screen_background_image_file = io.BytesIO(screen_background_image_string)
 

@@ -77,3 +77,19 @@ names and move them to a variable or something that I can add in as text next to
 Bug: I would like to reset the lists before text filters so that the pages don't disappear if you start filtering on
 page 2, 3, so on. Just looks weird and requires a button press to get back on track.
 
+## The pokeAPI Pokedex 1.1
+
+A spin-off / sequel to the original project, I'm creating a much more powerful version of the original by leveraging
+the power of pokeAPI to feed me all the Pokemon data I require to fill up my templated pages. I'm also improving on
+the structural ideas of the original and improving the code. 
+
+### pokeAPI todos
+
+Create a function to quickly set text and blit it to the screen, like I have with my button function
+
+Add more data to the Pokemon display pages
+
+Create lists to dynamically display Pokemon name buttons for the user
+
+Find a way to allow the user to filter through the list of Pokemon
+
