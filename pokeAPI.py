@@ -62,23 +62,23 @@ music_object.randomize_song()
 
 
 class GameScreen:
-    screen_width = 1080
-    screen_height = 720
-    screen = pygame.display.set_mode((screen_width, screen_height))
+    width = 1080
+    height = 720
+    screen = pygame.display.set_mode((width, height))
 
     def resize_screen(self):
-        if self.screen_width == 1080:
-            self.screen_width = 1600
-            self.screen_height = 900
-            self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        elif self.screen_width == 1600:
-            self.screen_width = 1920
-            self.screen_height = 1080
-            self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.RESIZABLE)
+        if self.width == 1080:
+            self.width = 1600
+            self.height = 900
+            self.screen = pygame.display.set_mode((self.width, self.height))
+        elif self.width == 1600:
+            self.width = 1920
+            self.height = 1080
+            self.screen = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
         else:
-            self.screen_width = 1080
-            self.screen_height = 720
-            self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+            self.width = 1080
+            self.height = 720
+            self.screen = pygame.display.set_mode((self.width, self.height))
 
 
 game_screen = GameScreen()
@@ -133,11 +133,11 @@ def get_data(api_url):
 
 
 # Setting different sized font options to be used later for general text and button labels
-large_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695))
-intermediate_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695 * 0.8))
-medium_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695 * 0.6))
-sml_med_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695 * 0.45))
-small_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695 * 0.33))
+large_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.height * 0.0695))
+intermediate_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.height * 0.0695 * 0.8))
+medium_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.height * 0.0695 * 0.6))
+sml_med_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.height * 0.0695 * 0.45))
+small_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.height * 0.0695 * 0.33))
 
 # Establishing a number of reusable rgb values for several colors
 slategray = (112, 128, 144)
@@ -148,6 +148,13 @@ white = (255, 255, 255)
 green = (0, 255, 0)
 thistle_green = (210, 210, 190)
 black = (0, 0, 0)
+
+
+def create_onscreen_text(font_size, color, message, x, y,):
+
+    text = font_size.render(message, True, color)
+
+    game_screen.screen.blit(text, (x, y))
 
 
 def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_color, x_adjust: bool):
@@ -185,15 +192,15 @@ def pokemon_search():
 
         game_screen.screen.fill(thistle_green)
 
-        game_screen.screen.blit(header_text, ((game_screen.screen_width - header_text.get_width())/2, 0))
+        game_screen.screen.blit(header_text, ((game_screen.width - header_text.get_width()) / 2, 0))
 
-        pokemon_name_height = game_screen.screen_height * 0.13
+        pokemon_name_height = game_screen.height * 0.13
         multi_factor = 1
         pokedex.d_count = 0
         for poke in pokemon_list_object["results"]:
 
-            poke_button = create_text_button(sml_med_font, white, f"{poke['name']}", game_screen.screen_width/3.5,
-                                             pokemon_name_height*multi_factor, blackish, black, False)
+            poke_button = create_text_button(sml_med_font, white, f"{poke['name']}", game_screen.width / 3.5,
+                                             pokemon_name_height * multi_factor, blackish, black, False)
             if poke_button:
                 print(f"{poke['name']}")
                 pokemon_display(poke['url'])
@@ -204,39 +211,39 @@ def pokemon_search():
             if pokedex.d_count >= pokedex.d_limit:
                 break
 
-        back_button = create_text_button(medium_font, white, "Back", game_screen.screen_width / 90,
-                                         game_screen.screen_height * 0.78, (0, 200, 0), green, False)
+        back_button = create_text_button(medium_font, white, "Back", game_screen.width / 90,
+                                         game_screen.height * 0.78, (0, 200, 0), green, False)
 
         if back_button:
             pokedex.o_count -= 9
             if pokedex.o_count < 0:
                 pokedex.o_count = 0
 
-        resize_button = create_text_button(sml_med_font, thunderbird_red, "Resize", game_screen.screen_width / 90,
-                                           game_screen.screen_height * 0.90, blackish, black, False)
+        resize_button = create_text_button(sml_med_font, thunderbird_red, "Resize", game_screen.width / 90,
+                                           game_screen.height * 0.90, blackish, black, False)
 
         if resize_button:
             game_screen.resize_screen()
 
-        randomize_button = create_text_button(sml_med_font, thunderbird_red, "Randomize", game_screen.screen_width / 90,
-                                              game_screen.screen_height * 0, blackish, black, False)
+        randomize_button = create_text_button(sml_med_font, thunderbird_red, "Randomize", game_screen.width / 90,
+                                              game_screen.height * 0, blackish, black, False)
 
         if randomize_button:
             pokemon_display('random')
 
-        next_button = create_text_button(medium_font, white, "Next", game_screen.screen_width * .82,
-                                         game_screen.screen_height * 0.78, (0, 200, 0), green, False)
+        next_button = create_text_button(medium_font, white, "Next", game_screen.width * .82,
+                                         game_screen.height * 0.78, (0, 200, 0), green, False)
 
         if next_button:
             pokedex.o_count += 9
 
-        music_toggle = create_text_button(sml_med_font, thunderbird_red, "Toggle Music", game_screen.screen_width * .82,
-                                          game_screen.screen_height * 0.90, blackish, black, False)
+        music_toggle = create_text_button(sml_med_font, thunderbird_red, "Toggle Music", game_screen.width * .82,
+                                          game_screen.height * 0.90, blackish, black, False)
 
         if music_toggle:
             music_object.music_toggle()
 
-        options_button = create_text_button(medium_font, white, "Options Menu", game_screen.screen_width * .775, 0,
+        options_button = create_text_button(medium_font, white, "Options Menu", game_screen.width * .775, 0,
                                             (0, 200, 0), green, False)
 
         if options_button:
@@ -257,29 +264,29 @@ def options_menu():
 
     while True:
         game_screen.screen.fill(thistle_green)
-        game_screen.screen.blit(title_text, ((game_screen.screen_width - title_text.get_width()) / 2, 0))
+        game_screen.screen.blit(title_text, ((game_screen.width - title_text.get_width()) / 2, 0))
 
-        music_button = create_text_button(medium_font, white, "Toggle Music", game_screen.screen_width / 1.97,
-                                          game_screen.screen_height / 6.5, lightgray, slategray, True)
+        music_button = create_text_button(medium_font, white, "Toggle Music", game_screen.width / 1.97,
+                                          game_screen.height / 6.5, lightgray, slategray, True)
         if music_button:
             music_object.music_toggle()
 
         # Bool declaration
         music_pause_declaration = "Yes" if music_object.music_paused else "No"
         music_paused_text = medium_font.render(f"Music Paused: " + music_pause_declaration, True, blackish)
-        bool_text_x = (game_screen.screen_width - music_paused_text.get_width()) / 2
-        bool_text_y = (game_screen.screen_height - music_paused_text.get_height()) / 3.8
+        bool_text_x = (game_screen.width - music_paused_text.get_width()) / 2
+        bool_text_y = (game_screen.height - music_paused_text.get_height()) / 3.8
         game_screen.screen.blit(music_paused_text, (bool_text_x, bool_text_y))
 
-        volume_height = game_screen.screen_height / 2.8
+        volume_height = game_screen.height / 2.8
         volume_text = medium_font.render(f"{music_object.volume_level}", True, black)
-        volume_text_x = (game_screen.screen_width / 2) - (volume_text.get_width() / 2) + 5
+        volume_text_x = (game_screen.width / 2) - (volume_text.get_width() / 2) + 5
         game_screen.screen.blit(volume_text, (volume_text_x, volume_height - 10))
 
-        volume_up_button = create_text_button(small_font, white, "Volume +", game_screen.screen_width / 2.25,
+        volume_up_button = create_text_button(small_font, white, "Volume +", game_screen.width / 2.25,
                                               volume_height, slategray, lightgray, True)
 
-        volume_down_button = create_text_button(small_font, white, "Volume -", game_screen.screen_width / 1.75,
+        volume_down_button = create_text_button(small_font, white, "Volume -", game_screen.width / 1.75,
                                                 volume_height, slategray, lightgray, True)
 
         if volume_up_button:
@@ -293,8 +300,8 @@ def options_menu():
             muted_text = medium_font.render("(muted)", True, thunderbird_red)
             game_screen.screen.blit(muted_text, (volume_text_x * .92, volume_height + 25))
 
-        music_changer = create_text_button(large_font, white, "Change Music Track", game_screen.screen_width / 2,
-                                           game_screen.screen_height / 2.2, slategray, lightgray, True)
+        music_changer = create_text_button(large_font, white, "Change Music Track", game_screen.width / 2,
+                                           game_screen.height / 2.2, slategray, lightgray, True)
 
         if music_changer:
             print("Track change initiated")
@@ -303,11 +310,11 @@ def options_menu():
         current_track_name = music_object.tracklist[music_object.current_track_index][6:-4] if \
             music_object.current_track_index != 13 else "    ????????????????????"
         current_track_text = small_font.render(f'Current Track: ' + current_track_name, True, blackish)
-        game_screen.screen.blit(current_track_text, (game_screen.screen_width / 2.8, game_screen.screen_height / 1.6))
+        game_screen.screen.blit(current_track_text, (game_screen.width / 2.8, game_screen.height / 1.6))
 
         # Return to start menu button
-        return_button = create_text_button(medium_font, white, "Return To Start", game_screen.screen_width / 2,
-                                           game_screen.screen_height / 1.25, slategray, lightgray, True)
+        return_button = create_text_button(medium_font, white, "Return To Start", game_screen.width / 2,
+                                           game_screen.height / 1.25, slategray, lightgray, True)
 
         if return_button:
             main()
@@ -323,7 +330,7 @@ def options_menu():
 
 def pokemon_display(url):
 
-    top_bar_height = game_screen.screen_height / 10
+    top_bar_height = game_screen.height / 10
 
     if url == "random":
         random_pokemon_index = random.randint(1, 800)
@@ -354,39 +361,41 @@ def pokemon_display(url):
     print(screen_background_image.get_width(), screen_background_image.get_height())
 
     # Scales the start screen image to the screen size
-    poke_photo = pygame.transform.scale(screen_background_image, (game_screen.screen_width / 2.5,
-                                                                  game_screen.screen_width / 2.5))
+    poke_photo = pygame.transform.scale(screen_background_image, (game_screen.width / 2.5,
+                                                                  game_screen.width / 2.5))
 
     while True:
 
         game_screen.screen.fill(slategray)
 
-        game_screen.screen.blit(pkmn_name_text, ((game_screen.screen_width - pkmn_name_text.get_width()) / 2,
-                                                 game_screen.screen_height / 30))
+        game_screen.screen.blit(pkmn_name_text, ((game_screen.width - pkmn_name_text.get_width()) / 2,
+                                                 game_screen.height / 30))
 
-        game_screen.screen.blit(poke_photo, ((game_screen.screen_width - poke_photo.get_width()) / 2,
+        create_onscreen_text(medium_font, thunderbird_red, "Base Stats", game_screen.width * 0.01, 0)
+
+        game_screen.screen.blit(poke_photo, ((game_screen.width - poke_photo.get_width()) / 2,
                                              top_bar_height * 1.1))
 
-        game_screen.screen.blit(pkmn_type1_text, ((game_screen.screen_width - pkmn_type1_text.get_width()) / 2,
-                                                  game_screen.screen_height * 0.7))
+        game_screen.screen.blit(pkmn_type1_text, ((game_screen.width - pkmn_type1_text.get_width()) / 2,
+                                                  game_screen.height * 0.7))
 
-        game_screen.screen.blit(pkmn_type2_text, ((game_screen.screen_width - pkmn_type1_text.get_width()) / 2,
-                                                  game_screen.screen_height * 0.8))
+        game_screen.screen.blit(pkmn_type2_text, ((game_screen.width - pkmn_type1_text.get_width()) / 2,
+                                                  game_screen.height * 0.8))
 
-        resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.screen_width / 90,
-                                           game_screen.screen_height * 0.85, blackish, black, False)
+        resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.width / 90,
+                                           game_screen.height * 0.85, blackish, black, False)
 
         if resize_button:
             game_screen.resize_screen()
 
-        randomize_button = create_text_button(medium_font, thunderbird_red, "Randomize", game_screen.screen_width / 90,
-                                              game_screen.screen_height * 0.75, blackish, black, False)
+        randomize_button = create_text_button(medium_font, thunderbird_red, "Randomize", game_screen.width / 90,
+                                              game_screen.height * 0.75, blackish, black, False)
 
         if randomize_button:
             pokemon_display('random')
 
-        return_button = create_text_button(medium_font, white, "Return", game_screen.screen_width * .85,
-                                           game_screen.screen_height * 0.85, (0, 200, 0), green, False)
+        return_button = create_text_button(medium_font, white, "Return", game_screen.width * .85,
+                                           game_screen.height * 0.85, (0, 200, 0), green, False)
 
         if return_button:
             main()

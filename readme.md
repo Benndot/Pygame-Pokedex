@@ -85,11 +85,11 @@ the structural ideas of the original and improving the code.
 
 ### pokeAPI todos
 
-Create a function to quickly set text and blit it to the screen, like I have with my button function
-
 Add more data to the Pokemon display pages
 
 Find a way to allow the user to filter through the list of Pokemon
+
+convert old text to the new function
 
 Makeover the UI to be less horribly ugly
 
