@@ -30,8 +30,13 @@ class MusicSettings:
         elif not self.music_paused:
             mixer.music.unpause()
 
-    def change_music_volume(self):
-        print(self.volume_level)
+    def change_music_volume(self, change_int: int):
+        self.volume_level += change_int
+        if self.volume_level > 100:
+            self.volume_level = 100
+        if self.volume_level < 0:
+            self.volume_level = 0
+        mixer.music.set_volume(music_object.volume_level / 350)
 
     def randomize_song(self):
         self.current_track_index = random.randint(0, len(self.tracklist)-1)
@@ -138,13 +143,13 @@ def pokemon_search():
                                               screen_height * 0.75, blackish, black, False)
 
         if randomize_button:
-            pokemon_display()
+            pokemon_display_random()
 
         return_button = create_text_button(medium_font, white, "Return", screen_width * .87,
                                            screen_height * 0.85, (0, 200, 0), green, False)
 
         if return_button:
-            print("return")
+            main()
 
         music_toggle = create_text_button(medium_font, white, "Toggle Music", screen_width * .775,
                                           screen_height * 0.75, (0, 200, 0), green, False)
@@ -201,16 +206,10 @@ def options_menu():
 
         if volume_up_button:
             print("volume increased!")
-            music_object.volume_level += 10
-            if music_object.volume_level > 100:
-                music_object.volume_level = 100
-            mixer.music.set_volume(music_object.volume_level/350)
+            music_object.change_music_volume(10)
         if volume_down_button:
             print("volume decreased!")
-            music_object.volume_level -= 10
-            if music_object.volume_level < 0:
-                music_object.volume_level = 0
-            mixer.music.set_volume(music_object.volume_level/350)
+            music_object.change_music_volume(-10)
 
         if music_object.volume_level == 0:
             muted_text = medium_font.render("(muted)", True, thunderbird_red)
@@ -250,7 +249,7 @@ def options_menu():
         clock.tick(15)
 
 
-def pokemon_display():
+def pokemon_display_random():
 
     top_bar_height = screen_height / 10
 
@@ -310,13 +309,13 @@ def pokemon_display():
                                               screen_height * 0.75, blackish, black, False)
 
         if randomize_button:
-            pokemon_display()
+            pokemon_display_random()
 
         return_button = create_text_button(medium_font, white, "Return", screen_width * .85,
                                            screen_height * 0.85, (0, 200, 0), green, False)
 
         if return_button:
-            print("return")
+            main()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
@@ -347,6 +346,14 @@ if __name__ == "__main__":
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["sprites"].keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
 
-    print(MusicSettings.volume_level)
+    pokemon_list_object = get_data("https://pokeapi.co/api/v2/pokemon")
+    # print(pokemon_list_object["results"][2])
+
+    # for poke in pokemon_list_object["results"]:
+    #     print(poke["name"])
+
+    pokemon_list_object = get_data(pokemon_list_object["next"])
+
+    print(pokemon_list_object)
 
     main()
