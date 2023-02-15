@@ -104,24 +104,21 @@ class CurrentPokemon:
     aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
     fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
     anim id est laborum."""
-    def __init__(self, dex_no, name, image_url, type1, type2, base_hp, base_atk, base_def, base_satk, base_sdef,
-                 base_spd, dex_entry):
+
+    def __init__(self, dex_no, name, image_url, type1, type2, stat_array, dex_entry):
         self.dex_no = dex_no
         self.name = name
         self.image_url = image_url
         self.type1 = type1
         self.type2 = type2
-        self.b_hp = base_hp
-        self.b_atk = base_atk
-        self.b_def = base_def
-        self.b_satk = base_satk
-        self.b_sdef = base_sdef
-        self.b_spd = base_spd
+        self.stats = stat_array
         self.dex_entry = dex_entry
 
 
-current_pokemon = CurrentPokemon(-1, "Placeholder", CurrentPokemon.substitute_image, "N/A", "N/A", -1, -1, -1, -1, -1,
-                                 -1, CurrentPokemon.placeholder_entry)
+current_pokemon = CurrentPokemon(-1, "Placeholder", CurrentPokemon.substitute_image, "N/A", "N/A",
+                                 [["health", "hp", -1], ["attack", "p. atk", -1], ["defense", "p. def", -1],
+                                  ["special attack", "s. atk", -1], ["special defense", "s. def", -1],
+                                  ["speed", "spd", -1]], CurrentPokemon.placeholder_entry)
 
 
 def get_data(api_url):
@@ -342,6 +339,9 @@ def pokemon_display(url):
         current_pokemon.name, current_pokemon.dex_no = pokemon_obj["name"].title(), pokemon_obj["id"]
         current_pokemon.type1 = pokemon_obj["types"][0]["type"]["name"].title()
         current_pokemon.type2 = "n/a"
+        for index, stat in enumerate(pokemon_obj["stats"]):
+            current_pokemon.stats[index][2] = stat['base_stat']
+        print(current_pokemon.stats)
         try:
             current_pokemon.type2 = pokemon_obj["types"][1]["type"]["name"].title()
         except IndexError:
@@ -371,7 +371,14 @@ def pokemon_display(url):
         game_screen.screen.blit(pkmn_name_text, ((game_screen.width - pkmn_name_text.get_width()) / 2,
                                                  game_screen.height / 30))
 
-        create_onscreen_text(medium_font, thunderbird_red, "Base Stats", game_screen.width * 0.01, 0)
+        create_onscreen_text(medium_font, black, "Base Stats", game_screen.width * 0.02, game_screen.height * 0.002)
+        create_onscreen_text(medium_font, black, "_________", game_screen.width * 0.02, game_screen.height * 0.006)
+
+        stat_height_multiplier = 1.00
+        for stat in current_pokemon.stats:
+            create_onscreen_text(sml_med_font, black, f"{stat[1]}: {stat[2]}", game_screen.width * 0.025,
+                                 game_screen.height * 0.08 * stat_height_multiplier)
+            stat_height_multiplier += 1
 
         game_screen.screen.blit(poke_photo, ((game_screen.width - poke_photo.get_width()) / 2,
                                              top_bar_height * 1.1))
@@ -425,7 +432,10 @@ def main():
 
 if __name__ == "__main__":
 
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["sprites"].keys())
+    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
+    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"])
+    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"][0]['base_stat'])
+    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"][0]['stat']['name'])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
 
     # pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
@@ -435,5 +445,6 @@ if __name__ == "__main__":
                                     f"{pokedex.d_limit}")
 
     print(pokemon_list_object2)
+
 
     main()
