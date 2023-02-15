@@ -187,13 +187,6 @@ def options_menu():
         bool_text_y = (screen_height - music_paused_text.get_height()) / 3.8
         screen.blit(music_paused_text, (bool_text_x, bool_text_y))
 
-        # Return to start menu button
-        return_button = create_text_button(medium_font, white, "Return To Start", screen_width / 2,
-                                           screen_height / 1.25, slategray, lightgray, True)
-
-        if return_button:
-            main()
-
         # Creating the (purely aesthetic) volume setting, including 2 buttons and the volume level display
         volume_height = screen_height / 2.8
         volume_text = medium_font.render(f"{music_object.volume_level}", True, black)
@@ -229,16 +222,24 @@ def options_menu():
         if music_changer:
             print("Track change initiated")
             mixer.music.stop()
-            # tracklist_index += 1
-            # if tracklist_index >= len(tracklist):
-            #     tracklist_index = 0
-            # mixer.music.load(tracklist[tracklist_index])
-            # mixer.music.set_volume(volume_level/350)
-            # mixer.music.play(-1)
+            music_object.current_track_index += 1
+            if music_object.current_track_index >= len(music_object.tracklist):
+                music_object.current_track_index = 0
+            mixer.music.load(music_object.tracklist[music_object.current_track_index])
+            mixer.music.set_volume(music_object.volume_level/350)
+            mixer.music.play(-1)
 
-        # current_track_name = tracklist[tracklist_index][6:-4] if tracklist_index != 13 else "    ????????????????????"
-        # current_track_text = small_font.render(f'Current Track: ' + current_track_name, True, blackish)
-        # screen.blit(current_track_text, (screen_width / 2.8, screen_height / 1.6))
+        current_track_name = music_object.tracklist[music_object.current_track_index][6:-4] if \
+            music_object.current_track_index != 13 else "    ????????????????????"
+        current_track_text = small_font.render(f'Current Track: ' + current_track_name, True, blackish)
+        screen.blit(current_track_text, (screen_width / 2.8, screen_height / 1.6))
+
+        # Return to start menu button
+        return_button = create_text_button(medium_font, white, "Return To Start", screen_width / 2,
+                                           screen_height / 1.25, slategray, lightgray, True)
+
+        if return_button:
+            main()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
