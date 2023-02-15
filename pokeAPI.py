@@ -401,6 +401,79 @@ def pokemon_display(url):
         if randomize_button:
             pokemon_display('random')
 
+        dex_entry_button = create_text_button(medium_font, white, "Entry", game_screen.width * .85, 0, (0, 200, 0),
+                                              green, False)
+
+        if dex_entry_button:
+            pokemon_entry(current_pokemon.dex_no)
+
+        return_button = create_text_button(medium_font, white, "Return", game_screen.width * .85,
+                                           game_screen.height * 0.85, (0, 200, 0), green, False)
+
+        if return_button:
+            main()
+
+        for evnt in pygame.event.get():
+            if evnt.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.update()
+        clock.tick(15)
+
+
+def pokemon_entry(dex_id: int):
+
+    top_bar_height = game_screen.height / 10
+
+    try:
+        current_pokemon.dex_entry = \
+            get_data(f"https://pokeapi.co/api/v2/pokemon-species/{dex_id}")['flavor_text_entries'][0]['flavor_text']
+
+    except TypeError:
+        print("There was an error, deploying placeholders")
+
+    pkmn_name_text = large_font.render(f"#{current_pokemon.dex_no}. {current_pokemon.name}", True, white)
+    entry_text = sml_med_font.render(f'{current_pokemon.dex_entry}', True, white)
+
+    screen_background_image_url = urlopen(current_pokemon.image_url).read()
+    screen_background_image_file = io.BytesIO(screen_background_image_url)
+    screen_background_image = pygame.image.load(screen_background_image_file)
+
+    print(screen_background_image.get_width(), screen_background_image.get_height())
+
+    # Scales the start screen image to the screen size
+    poke_photo = pygame.transform.scale(screen_background_image, (game_screen.width / 2.5,
+                                                                  game_screen.width / 2.5))
+
+    while True:
+
+        game_screen.screen.fill(slategray)
+
+        game_screen.screen.blit(pkmn_name_text, ((game_screen.width - pkmn_name_text.get_width()) / 2,
+                                                 game_screen.height / 30))
+
+        create_onscreen_text(medium_font, black, "Base Stats", game_screen.width * 0.02, game_screen.height * 0.002)
+        create_onscreen_text(medium_font, black, "_________", game_screen.width * 0.02, game_screen.height * 0.006)
+
+        stat_height_multiplier = 1.00
+        for stat in current_pokemon.stats:
+            create_onscreen_text(sml_med_font, black, f"{stat[1]}: {stat[2]}", game_screen.width * 0.025,
+                                 game_screen.height * 0.08 * stat_height_multiplier)
+            stat_height_multiplier += 1
+
+        game_screen.screen.blit(poke_photo, ((game_screen.width - poke_photo.get_width()) / 2,
+                                             top_bar_height * 1.1))
+
+        game_screen.screen.blit(entry_text, ((game_screen.width - entry_text.get_width()) / 2,
+                                             game_screen.height * 0.7))
+
+        resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.width / 90,
+                                           game_screen.height * 0.85, blackish, black, False)
+
+        if resize_button:
+            game_screen.resize_screen()
+
         return_button = create_text_button(medium_font, white, "Return", game_screen.width * .85,
                                            game_screen.height * 0.85, (0, 200, 0), green, False)
 
@@ -432,7 +505,9 @@ def main():
 
 if __name__ == "__main__":
 
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
+    print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
+    print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0]['flavor_text'])
+    print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"][0]['base_stat'])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"][0]['stat']['name'])
@@ -440,11 +515,6 @@ if __name__ == "__main__":
 
     # pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
     # print(pokemon_list_object2["next"])
-
-    pokemon_list_object2 = get_data(f"https://pokeapi.co/api/v2/pokemon?offset={pokedex.o_count}&limit="
-                                    f"{pokedex.d_limit}")
-
-    print(pokemon_list_object2)
 
 
     main()
