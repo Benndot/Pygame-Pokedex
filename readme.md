@@ -91,5 +91,5 @@ Add more data to the Pokemon display pages
 
 Find a way to allow the user to filter through the list of Pokemon
 
-Make font sizes proportional rather than absolute
+Makeover the UI to be less horribly ugly
 

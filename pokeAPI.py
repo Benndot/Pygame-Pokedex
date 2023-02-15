@@ -96,16 +96,32 @@ pokedex = Pokedex(0, 9, 0)
 
 
 class CurrentPokemon:
-    def __init__(self, dex_no, name, image_url, type1, type2):
+
+    substitute_image = "https://avatars.githubusercontent.com/u/32001362?v=4"
+
+    placeholder_entry = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut 
+    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
+    fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
+    anim id est laborum."""
+    def __init__(self, dex_no, name, image_url, type1, type2, base_hp, base_atk, base_def, base_satk, base_sdef,
+                 base_spd, dex_entry):
         self.dex_no = dex_no
         self.name = name
         self.image_url = image_url
         self.type1 = type1
         self.type2 = type2
+        self.b_hp = base_hp
+        self.b_atk = base_atk
+        self.b_def = base_def
+        self.b_satk = base_satk
+        self.b_sdef = base_sdef
+        self.b_spd = base_spd
+        self.dex_entry = dex_entry
 
 
-current_pokemon = CurrentPokemon(-1, "Placeholder", "https://avatars.githubusercontent.com/u/32001362?v=4", "N/A",
-                                 "N/A")
+current_pokemon = CurrentPokemon(-1, "Placeholder", CurrentPokemon.substitute_image, "N/A", "N/A", -1, -1, -1, -1, -1,
+                                 -1, CurrentPokemon.placeholder_entry)
 
 
 def get_data(api_url):
@@ -327,16 +343,12 @@ def pokemon_display(url):
     except TypeError:
         print("There was an error, deploying placeholders")
 
-    pokemon_name_text = large_font.render(f"#{current_pokemon.dex_no}. {current_pokemon.name}", True, white)
-    pokemon_type1_text = large_font.render(f"Type 1:    {current_pokemon.type1}", True, white)
-    pokemon_type2_text = large_font.render(f"Type 2:    {current_pokemon.type2}", True, white)
-    screen_background_image_string = urlopen(current_pokemon.image_url).read()
+    pkmn_name_text = large_font.render(f"#{current_pokemon.dex_no}. {current_pokemon.name}", True, white)
+    pkmn_type1_text = intermediate_font.render(f"Type 1:    {current_pokemon.type1}", True, white)
+    pkmn_type2_text = intermediate_font.render(f"Type 2:    {current_pokemon.type2}", True, white)
 
-    screen_background_image_file = io.BytesIO(screen_background_image_string)
-
-    # print(type(screen_background_image_string))  # bytes class
-    # print(type(screen_background_image_file))  # io.BytesI0
-
+    screen_background_image_url = urlopen(current_pokemon.image_url).read()
+    screen_background_image_file = io.BytesIO(screen_background_image_url)
     screen_background_image = pygame.image.load(screen_background_image_file)
 
     print(screen_background_image.get_width(), screen_background_image.get_height())
@@ -349,17 +361,17 @@ def pokemon_display(url):
 
         game_screen.screen.fill(slategray)
 
-        game_screen.screen.blit(pokemon_name_text, ((game_screen.screen_width - pokemon_name_text.get_width())/2,
-                                                    game_screen.screen_height / 30))
+        game_screen.screen.blit(pkmn_name_text, ((game_screen.screen_width - pkmn_name_text.get_width()) / 2,
+                                                 game_screen.screen_height / 30))
 
         game_screen.screen.blit(poke_photo, ((game_screen.screen_width - poke_photo.get_width()) / 2,
                                              top_bar_height * 1.1))
 
-        game_screen.screen.blit(pokemon_type1_text, ((game_screen.screen_width - pokemon_type1_text.get_width())/2,
-                                                     game_screen.screen_height * 0.7))
+        game_screen.screen.blit(pkmn_type1_text, ((game_screen.screen_width - pkmn_type1_text.get_width()) / 2,
+                                                  game_screen.screen_height * 0.7))
 
-        game_screen.screen.blit(pokemon_type2_text, ((game_screen.screen_width - pokemon_type1_text.get_width()) / 2,
-                                                     game_screen.screen_height * 0.8))
+        game_screen.screen.blit(pkmn_type2_text, ((game_screen.screen_width - pkmn_type1_text.get_width()) / 2,
+                                                  game_screen.screen_height * 0.8))
 
         resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.screen_width / 90,
                                            game_screen.screen_height * 0.85, blackish, black, False)
@@ -404,18 +416,11 @@ def main():
 
 if __name__ == "__main__":
 
-    print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["sprites"].keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
 
     # pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
     # print(pokemon_list_object2["next"])
-    # print(pokemon_list_object["results"][2])
-
-    # for poke in pokemon_list_object["results"]:
-    #     print(poke["name"])
-
-    # pokemon_list_object = get_data(pokemon_list_object["next"])
 
     pokemon_list_object2 = get_data(f"https://pokeapi.co/api/v2/pokemon?offset={pokedex.o_count}&limit="
                                     f"{pokedex.d_limit}")
