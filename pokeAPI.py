@@ -1,5 +1,6 @@
 import random
 import pygame
+from pygame import mixer
 import sys
 import requests
 import io
@@ -10,6 +11,33 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # you can access PokeAPI both by the Pokemon species' name and by their national Pokédex number
+
+
+class MusicSettings:
+
+    volume_level = 50
+    music_paused = False
+
+    def music_toggle(self):
+        print("The music pausing bool has been toggled")
+        self.music_paused = not self.music_paused
+        if self.music_paused:
+            mixer.music.pause()
+        elif not self.music_paused:
+            mixer.music.unpause()
+
+    def change_music_volume(self):
+        print(self.volume_level)
+
+
+spooky_song = "audio/Pokemon BlueRed - Lavender Town.mp3"
+tracklist = ["audio/Pokemon Ruby- Littleroot Town.mp3", "audio/Pokemon Ruby- Route 101.mp3",
+             "audio/Pokemon Ruby- Route 104.mp3"]
+tracklist_index = random.randint(0, len(tracklist) - 1)
+mixer.init()
+mixer.music.load(tracklist[tracklist_index])
+mixer.music.set_volume(MusicSettings.volume_level/350)
+mixer.music.play(-1)
 
 
 def get_data(api_url):
@@ -55,6 +83,7 @@ lightgray = (165, 175, 185)
 blackish = (10, 10, 10)
 thunderbird_red = (200, 15, 25)
 white = (255, 255, 255)
+green = (0, 255, 0)
 thistle_green = (210, 210, 190)
 black = (0, 0, 0)
 
@@ -81,6 +110,43 @@ def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_
         pygame.draw.rect(screen, default_color, (x, y, button_width, button_height))
 
     screen.blit(button_msg, (x + button_width / 10, y + button_height / 10))
+
+
+def pokemon_search():
+
+    header_text = large_font.render("Pokedex Search", True, black)
+
+    while True:
+
+        screen.fill(thistle_green)
+
+        screen.blit(header_text, ((screen_width - header_text.get_width())/2, 0))
+
+        resize_button = create_text_button(medium_font, thunderbird_red, "Resize", screen_width / 90,
+                                           screen_height * 0.85, blackish, black, False)
+
+        if resize_button:
+            resize_screen()
+
+        randomize_button = create_text_button(medium_font, thunderbird_red, "Randomize", screen_width / 90,
+                                              screen_height * 0.75, blackish, black, False)
+
+        if randomize_button:
+            pokemon_display()
+
+        return_button = create_text_button(medium_font, white, "Return", screen_width * .85,
+                                           screen_height * 0.85, (0, 200, 0), green, False)
+
+        if return_button:
+            print("return")
+
+        for evnt in pygame.event.get():
+            if evnt.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.update()
+        clock.tick(15)
 
 
 def pokemon_display():
@@ -145,6 +211,12 @@ def pokemon_display():
         if randomize_button:
             pokemon_display()
 
+        return_button = create_text_button(medium_font, white, "Return", screen_width * .85,
+                                           screen_height * 0.85, (0, 200, 0), green, False)
+
+        if return_button:
+            print("return")
+
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
                 pygame.quit()
@@ -157,7 +229,7 @@ def pokemon_display():
 def main():
     while True:
 
-        pokemon_display()
+        pokemon_search()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
@@ -173,5 +245,7 @@ if __name__ == "__main__":
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["sprites"].keys())
     # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
+
+    print(MusicSettings.volume_level)
 
     main()
