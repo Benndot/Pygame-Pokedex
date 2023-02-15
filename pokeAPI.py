@@ -1,3 +1,4 @@
+import math
 import random
 import pygame
 from pygame import mixer
@@ -116,11 +117,11 @@ def get_data(api_url):
 
 
 # Setting different sized font options to be used later for general text and button labels
-large_font = pygame.font.SysFont("comicsansms", 50)
-intermediate_font = pygame.font.SysFont("comicsansms", 40)
-medium_font = pygame.font.SysFont("comicsansms", 30)
-sml_med_font = pygame.font.SysFont("comicsansms", 24)
-small_font = pygame.font.SysFont("comicsansms", 16)
+large_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695))
+intermediate_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695 * 0.8))
+medium_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695 * 0.6))
+sml_med_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695 * 0.45))
+small_font = pygame.font.SysFont("comicsansms", math.ceil(game_screen.screen_height * 0.0695 * 0.33))
 
 # Establishing a number of reusable rgb values for several colors
 slategray = (112, 128, 144)
@@ -161,8 +162,6 @@ def pokemon_search():
 
     header_text = large_font.render("Pokedex Search", True, black)
 
-    pokedex.o_count = 0
-
     while True:
 
         pokemon_list_object = get_data(f"https://pokeapi.co/api/v2/pokemon?offset={pokedex.o_count}&limit="
@@ -184,19 +183,21 @@ def pokemon_search():
                 pokemon_display(poke['url'])
 
             pokedex.d_count += 1
-            multi_factor += 0.75
+            multi_factor += 0.72
 
             if pokedex.d_count >= pokedex.d_limit:
                 break
 
-        next_button = create_text_button(medium_font, white, "Next", game_screen.screen_width / 90,
-                                         game_screen.screen_height * 0.80, green, black, False)
+        back_button = create_text_button(medium_font, white, "Back", game_screen.screen_width / 90,
+                                         game_screen.screen_height * 0.78, (0, 200, 0), green, False)
 
-        if next_button:
-            pokedex.o_count += 9
+        if back_button:
+            pokedex.o_count -= 9
+            if pokedex.o_count < 0:
+                pokedex.o_count = 0
 
         resize_button = create_text_button(sml_med_font, thunderbird_red, "Resize", game_screen.screen_width / 90,
-                                           game_screen.screen_height * 0.95, blackish, black, False)
+                                           game_screen.screen_height * 0.90, blackish, black, False)
 
         if resize_button:
             game_screen.resize_screen()
@@ -207,20 +208,20 @@ def pokemon_search():
         if randomize_button:
             pokemon_display('random')
 
-        return_button = create_text_button(medium_font, white, "Return", game_screen.screen_width * .87,
-                                           game_screen.screen_height * 0.85, (0, 200, 0), green, False)
+        next_button = create_text_button(medium_font, white, "Next", game_screen.screen_width * .82,
+                                         game_screen.screen_height * 0.78, (0, 200, 0), green, False)
 
-        if return_button:
-            main()
+        if next_button:
+            pokedex.o_count += 9
 
-        music_toggle = create_text_button(medium_font, white, "Toggle Music", game_screen.screen_width * .775,
-                                          game_screen.screen_height * 0.75, (0, 200, 0), green, False)
+        music_toggle = create_text_button(sml_med_font, thunderbird_red, "Toggle Music", game_screen.screen_width * .82,
+                                          game_screen.screen_height * 0.90, blackish, black, False)
 
         if music_toggle:
             music_object.music_toggle()
 
-        options_button = create_text_button(medium_font, white, "Options Menu", game_screen.screen_width * .775,
-                                            game_screen.screen_height * 0.65, (0, 200, 0), green, False)
+        options_button = create_text_button(medium_font, white, "Options Menu", game_screen.screen_width * .775, 0,
+                                            (0, 200, 0), green, False)
 
         if options_button:
             options_menu()
