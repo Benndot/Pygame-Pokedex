@@ -199,7 +199,7 @@ def pokemon_search():
                                               game_screen.screen_height * 0, blackish, black, False)
 
         if randomize_button:
-            pokemon_display_random()
+            pokemon_display('random')
 
         return_button = create_text_button(medium_font, white, "Return", game_screen.screen_width * .87,
                                            game_screen.screen_height * 0.85, (0, 200, 0), green, False)
@@ -298,14 +298,16 @@ def options_menu():
         clock.tick(15)
 
 
-def pokemon_display_random():
+def pokemon_display(url):
 
     top_bar_height = game_screen.screen_height / 10
 
-    random_pokemon_index = random.randint(1, 800)
+    if url == "random":
+        random_pokemon_index = random.randint(1, 800)
+        url = f"https://pokeapi.co/api/v2/pokemon/{random_pokemon_index}"
 
     try:
-        pokemon_obj = get_data(f"https://pokeapi.co/api/v2/pokemon/{random_pokemon_index}")
+        pokemon_obj = get_data(url)
         current_pokemon.image_url = pokemon_obj["sprites"]["front_default"]
         current_pokemon.name, current_pokemon.dex_no = pokemon_obj["name"].title(), pokemon_obj["id"]
         current_pokemon.type1 = pokemon_obj["types"][0]["type"]["name"].title()
@@ -362,7 +364,7 @@ def pokemon_display_random():
                                               game_screen.screen_height * 0.75, blackish, black, False)
 
         if randomize_button:
-            pokemon_display_random()
+            pokemon_display('random')
 
         return_button = create_text_button(medium_font, white, "Return", game_screen.screen_width * .85,
                                            game_screen.screen_height * 0.85, (0, 200, 0), green, False)
