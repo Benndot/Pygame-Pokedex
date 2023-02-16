@@ -430,17 +430,16 @@ def pokemon_entry(dex_id: int):
         current_pokemon.dex_entry = \
             get_data(f"https://pokeapi.co/api/v2/pokemon-species/{dex_id}")['flavor_text_entries'][0]['flavor_text']
 
+        current_pokemon.dex_entry = current_pokemon.dex_entry.replace("\n", " ")
+
     except TypeError:
         print("There was an error, deploying placeholders")
 
     pkmn_name_text = large_font.render(f"#{current_pokemon.dex_no}. {current_pokemon.name}", True, white)
-    entry_text = sml_med_font.render(f'{current_pokemon.dex_entry}', True, white)
 
     screen_background_image_url = urlopen(current_pokemon.image_url).read()
     screen_background_image_file = io.BytesIO(screen_background_image_url)
     screen_background_image = pygame.image.load(screen_background_image_file)
-
-    print(screen_background_image.get_width(), screen_background_image.get_height())
 
     # Scales the start screen image to the screen size
     poke_photo = pygame.transform.scale(screen_background_image, (game_screen.width / 2.5,
@@ -465,8 +464,25 @@ def pokemon_entry(dex_id: int):
         game_screen.screen.blit(poke_photo, ((game_screen.width - poke_photo.get_width()) / 2,
                                              top_bar_height * 1.1))
 
-        game_screen.screen.blit(entry_text, ((game_screen.width - entry_text.get_width()) / 2,
-                                             game_screen.height * 0.7))
+        # Pokédex's entry display code block below
+        entry_x = game_screen.width / 3
+
+        start_index = 0
+        height_offset = 1
+        index_counter = 0
+        for index, char in enumerate(current_pokemon.dex_entry):
+            index_counter += 1
+            if char == " " and index_counter >= 30:
+                end_index = index + 1
+                create_onscreen_text(sml_med_font, black, current_pokemon.dex_entry[start_index: end_index], entry_x,
+                                     game_screen.height * 0.6 * height_offset)
+                height_offset += 0.15
+                start_index = index
+                index_counter = 0
+            if index >= len(current_pokemon.dex_entry)-1:
+                create_onscreen_text(sml_med_font, black, current_pokemon.dex_entry[start_index: -1],
+                                     entry_x, game_screen.height * 0.6 * height_offset)
+                break
 
         resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.width / 90,
                                            game_screen.height * 0.85, blackish, black, False)
@@ -515,6 +531,5 @@ if __name__ == "__main__":
 
     # pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
     # print(pokemon_list_object2["next"])
-
 
     main()
