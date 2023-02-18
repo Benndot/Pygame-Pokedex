@@ -11,8 +11,6 @@ pygame.init()
 
 clock = pygame.time.Clock()
 
-# you can access PokeAPI both by the Pokemon species' name and by their national Pokédex number
-
 
 class MusicSettings:
 
@@ -332,7 +330,6 @@ def pokemon_search():
             poke_button = create_text_button(sml_med_font, white, f"{poke['name']}", game_screen.width / 3.5,
                                              pokemon_name_height * multi_factor, blackish, black, False)
             if poke_button:
-                print(f"{poke['name']}")
                 pokemon_display(poke['url'])
 
             pokedex.d_count += 1
@@ -404,7 +401,6 @@ def pokemon_display(url):
         current_pokemon.type2 = "n/a"
         for index, stat in enumerate(pokemon_obj["stats"]):
             current_pokemon.stats[index][2] = stat['base_stat']
-        print(current_pokemon.stats)
         try:
             current_pokemon.type2 = pokemon_obj["types"][1]["type"]["name"].title()
         except IndexError:
@@ -584,11 +580,11 @@ def main():
 
 if __name__ == "__main__":
 
-    print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
-    print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0]['flavor_text'])
-    print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0])
+    # you can access PokeAPI both by the Pokemon species' name and by their national Pokédex number
+    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
+    # print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0]['flavor_text'])
+    # print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"])
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"][0]['base_stat'])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"][0]['stat']['name'])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
 
