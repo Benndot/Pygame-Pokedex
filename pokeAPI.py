@@ -241,6 +241,76 @@ def start_screen():
         return True
 
 
+def options_menu():
+
+    title_text = large_font.render("Options Menu", True, blackish)
+
+    while True:
+        game_screen.screen.fill(thistle_green)
+        game_screen.screen.blit(title_text, ((game_screen.width - title_text.get_width()) / 2, 0))
+
+        music_button = create_text_button(medium_font, white, "Toggle Music", game_screen.width / 1.97,
+                                          game_screen.height / 6.5, lightgray, slategray, True)
+        if music_button:
+            music_object.music_toggle()
+
+        # Bool declaration
+        music_pause_declaration = "Yes" if music_object.music_paused else "No"
+        music_paused_text = medium_font.render(f"Music Paused: " + music_pause_declaration, True, blackish)
+        bool_text_x = (game_screen.width - music_paused_text.get_width()) / 2
+        bool_text_y = (game_screen.height - music_paused_text.get_height()) / 3.8
+        game_screen.screen.blit(music_paused_text, (bool_text_x, bool_text_y))
+
+        volume_height = game_screen.height / 2.8
+        volume_text = medium_font.render(f"{music_object.volume_level}", True, black)
+        volume_text_x = (game_screen.width / 2) - (volume_text.get_width() / 2) + 5
+        game_screen.screen.blit(volume_text, (volume_text_x, volume_height - 10))
+
+        volume_up_button = create_text_button(small_font, white, "Volume +", game_screen.width / 2.25,
+                                              volume_height, slategray, lightgray, True)
+
+        volume_down_button = create_text_button(small_font, white, "Volume -", game_screen.width / 1.75,
+                                                volume_height, slategray, lightgray, True)
+
+        if volume_up_button:
+            print("volume increased!")
+            music_object.change_music_volume(10)
+        if volume_down_button:
+            print("volume decreased!")
+            music_object.change_music_volume(-10)
+
+        if music_object.volume_level == 0:
+            muted_text = medium_font.render("(muted)", True, thunderbird_red)
+            game_screen.screen.blit(muted_text, (volume_text_x * .92, volume_height + 25))
+
+        music_changer = create_text_button(large_font, white, "Change Music Track", game_screen.width / 2,
+                                           game_screen.height / 2.2, slategray, lightgray, True)
+
+        if music_changer:
+            print("Track change initiated")
+            music_object.cycle_track()
+
+        current_track_name = music_object.tracklist[music_object.current_track_index][6:-4] if \
+            music_object.current_track_index != 13 else "    ????????????????????"
+        current_track_text = small_font.render(f'Current Track: ' + current_track_name, True, blackish)
+        game_screen.screen.blit(current_track_text, (game_screen.width / 2.8, game_screen.height / 1.6))
+
+        # Return to start menu button
+        return_button = create_text_button(medium_font, white, "Return To Start", game_screen.width / 2,
+                                           game_screen.height / 1.25, slategray, lightgray, True)
+
+        if return_button:
+            main()
+
+        for evnt in pygame.event.get():
+            if evnt.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.update()
+        clock.tick(15)
+
+
 def pokemon_search():
 
     header_text = large_font.render("Pokedex Search", True, black)
@@ -308,76 +378,6 @@ def pokemon_search():
 
         if options_button:
             options_menu()
-
-        for evnt in pygame.event.get():
-            if evnt.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        pygame.display.update()
-        clock.tick(15)
-
-
-def options_menu():
-
-    title_text = large_font.render("Options Menu", True, blackish)
-
-    while True:
-        game_screen.screen.fill(thistle_green)
-        game_screen.screen.blit(title_text, ((game_screen.width - title_text.get_width()) / 2, 0))
-
-        music_button = create_text_button(medium_font, white, "Toggle Music", game_screen.width / 1.97,
-                                          game_screen.height / 6.5, lightgray, slategray, True)
-        if music_button:
-            music_object.music_toggle()
-
-        # Bool declaration
-        music_pause_declaration = "Yes" if music_object.music_paused else "No"
-        music_paused_text = medium_font.render(f"Music Paused: " + music_pause_declaration, True, blackish)
-        bool_text_x = (game_screen.width - music_paused_text.get_width()) / 2
-        bool_text_y = (game_screen.height - music_paused_text.get_height()) / 3.8
-        game_screen.screen.blit(music_paused_text, (bool_text_x, bool_text_y))
-
-        volume_height = game_screen.height / 2.8
-        volume_text = medium_font.render(f"{music_object.volume_level}", True, black)
-        volume_text_x = (game_screen.width / 2) - (volume_text.get_width() / 2) + 5
-        game_screen.screen.blit(volume_text, (volume_text_x, volume_height - 10))
-
-        volume_up_button = create_text_button(small_font, white, "Volume +", game_screen.width / 2.25,
-                                              volume_height, slategray, lightgray, True)
-
-        volume_down_button = create_text_button(small_font, white, "Volume -", game_screen.width / 1.75,
-                                                volume_height, slategray, lightgray, True)
-
-        if volume_up_button:
-            print("volume increased!")
-            music_object.change_music_volume(10)
-        if volume_down_button:
-            print("volume decreased!")
-            music_object.change_music_volume(-10)
-
-        if music_object.volume_level == 0:
-            muted_text = medium_font.render("(muted)", True, thunderbird_red)
-            game_screen.screen.blit(muted_text, (volume_text_x * .92, volume_height + 25))
-
-        music_changer = create_text_button(large_font, white, "Change Music Track", game_screen.width / 2,
-                                           game_screen.height / 2.2, slategray, lightgray, True)
-
-        if music_changer:
-            print("Track change initiated")
-            music_object.cycle_track()
-
-        current_track_name = music_object.tracklist[music_object.current_track_index][6:-4] if \
-            music_object.current_track_index != 13 else "    ????????????????????"
-        current_track_text = small_font.render(f'Current Track: ' + current_track_name, True, blackish)
-        game_screen.screen.blit(current_track_text, (game_screen.width / 2.8, game_screen.height / 1.6))
-
-        # Return to start menu button
-        return_button = create_text_button(medium_font, white, "Return To Start", game_screen.width / 2,
-                                           game_screen.height / 1.25, slategray, lightgray, True)
-
-        if return_button:
-            main()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
@@ -474,7 +474,7 @@ def pokemon_display(url):
                                            game_screen.height * 0.85, (0, 200, 0), green, False)
 
         if return_button:
-            main()
+            pokemon_search()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
@@ -557,7 +557,7 @@ def pokemon_entry(dex_id: int):
                                            game_screen.height * 0.85, (0, 200, 0), green, False)
 
         if return_button:
-            main()
+            pokemon_search()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
