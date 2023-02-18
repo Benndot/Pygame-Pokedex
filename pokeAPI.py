@@ -154,6 +154,20 @@ def create_onscreen_text(font_size, color, message, x, y,):
     game_screen.screen.blit(text, (x, y))
 
 
+def create_transparent_button(width, height, x, y):
+
+    mouse = pygame.mouse.get_pos()
+
+    if x + width > mouse[0] > x and y + height > mouse[1] > y:
+        s = pygame.Surface((width, height))  # the size of your rect
+        s.set_alpha(128)  # alpha level
+        s.fill((255, 255, 255))  # this fills the entire surface
+        game_screen.screen.blit(s, (x, y))  # (0,0) are the top-left coordinates
+        for evnt in pygame.event.get():
+            if evnt.type == pygame.MOUSEBUTTONUP:
+                return True
+
+
 def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_color, x_adjust: bool):
 
     mouse = pygame.mouse.get_pos()
@@ -176,6 +190,55 @@ def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_
         pygame.draw.rect(game_screen.screen, default_color, (x, y, button_width, button_height))
 
     game_screen.screen.blit(button_msg, (x + button_width / 10, y + button_height / 10))
+
+
+def start_screen():
+
+    start_text = medium_font.render("The Pygame Pokedex", True, white)
+
+    top_bar_height = 70
+
+    title_photo = pygame.image.load("pokePics/pokedex-spooky.jpg")
+
+    # Scales the start screen image to the screen size
+    start_photo = pygame.transform.scale(title_photo, (game_screen.width, game_screen.height - top_bar_height))
+
+    while True:
+        game_screen.screen.fill((0, 0, 200))
+        game_screen.screen.blit(start_text, ((game_screen.width - start_text.get_width()) / 2, game_screen.height / 65))
+
+        menu_button = create_text_button(small_font, blackish, "Open Menu", game_screen.width * .9,
+                                         game_screen.height * 0.03, lightgray, slategray, True)
+
+        if menu_button:
+            pokemon_search()
+            # return
+
+        music_button = create_text_button(small_font, blackish, "Toggle Music", game_screen.width * .78,
+                                          game_screen.height * 0.03, lightgray, slategray, True)
+
+        if music_button:
+            music_object.music_toggle()
+
+        ghost_button = create_transparent_button(250, 100, game_screen.width / 1.75, game_screen.height / 2.8)
+
+        if ghost_button:
+            print("Ghost button clicked!")
+            mixer.music.load(music_object.spooky_song)
+            mixer.music.set_volume(music_object.volume_level / 350)
+            mixer.music.play(-1)
+            music_object.current_track_index = 13
+
+        game_screen.screen.blit(start_photo, (0, 70))
+
+        for evnt in pygame.event.get():
+            if evnt.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.update()
+        clock.tick(15)
+        return True
 
 
 def pokemon_search():
@@ -508,7 +571,7 @@ def pokemon_entry(dex_id: int):
 def main():
     while True:
 
-        pokemon_search()
+        start_screen()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:
