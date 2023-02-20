@@ -313,6 +313,12 @@ def pokemon_search():
 
     header_text = large_font.render("Pokedex Search", True, black)
 
+    offset_choice_label = medium_font.render("Skip to dex number", True, white)
+
+    offset_choice = ""  # Empty string that will take the user's input
+
+    search_active: bool = False
+
     while True:
 
         pokemon_list_object = get_data(f"https://pokeapi.co/api/v2/pokemon?offset={pokedex.o_count}&limit="
@@ -321,6 +327,14 @@ def pokemon_search():
         game_screen.screen.fill(thistle_green)
 
         game_screen.screen.blit(header_text, ((game_screen.width - header_text.get_width()) / 2, 0))
+
+        # Establishing the user input text and the border box that will surround it
+        search_surface = medium_font.render(offset_choice, True, black)
+        search_x = (game_screen.width - search_surface.get_width()) * 0.95
+        search_y = game_screen.height * .33
+        game_screen.screen.blit(offset_choice_label, (game_screen.width * 0.7, search_y - 60))
+        search_border = pygame.Rect(search_x - 10, search_y, search_surface.get_width() + 10, 50)
+        game_screen.screen.blit(search_surface, (search_x, search_y))
 
         pokemon_name_height = game_screen.height * 0.13
         multi_factor = 1
@@ -380,6 +394,28 @@ def pokemon_search():
             if evnt.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if evnt.type == pygame.MOUSEBUTTONDOWN:
+                if search_border.collidepoint(evnt.pos):
+                    search_active = not search_active
+
+            if evnt.type == pygame.KEYDOWN:
+                if search_active:
+                    if evnt.key == pygame.K_BACKSPACE:
+                        offset_choice = offset_choice[:-1]
+                    else:
+                        numbers = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6,
+                                   pygame.K_7, pygame.K_8, pygame.K_9]
+                        if len(offset_choice) > 12:
+                            pass
+                        elif evnt.key in numbers:
+                            offset_choice += evnt.unicode
+                            offset_num = int(offset_choice)
+                            pokedex.o_count = offset_num
+
+        if search_active:
+            pygame.draw.rect(game_screen.screen, white, search_border, 2)
+        else:
+            pygame.draw.rect(game_screen.screen, slategray, search_border, 2)
 
         pygame.display.update()
         clock.tick(15)

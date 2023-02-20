@@ -401,7 +401,7 @@ def pokedex_search():
 
     search_string = ""  # Empty string that will take the user's input
 
-    search_active: bool = False  # NOT IMPLEMENTED. To make it so that the search rect must be active to input text
+    search_active: bool = False
 
     while True:
         screen.fill(lightgray)
