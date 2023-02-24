@@ -102,9 +102,5 @@ Finding a comprehensive way to get the correct flavour text for each pokemon to 
 (aka english and with only supported characters)
 
 since API doesn't change very often, probably should just grab the Pokemon list data instead of making more and more
-call to it. Maybe even save searches to a file that can be re-accessed without the internet later
-
-Watch out for and fix any potential index errors arising from the Pokemon API list
-
-add pokedex cover page
+call to it. Maybe save pokemon master list to a file that updates itself every once in a while based on datetime
 

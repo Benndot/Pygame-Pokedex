@@ -353,9 +353,6 @@ def pokemon_search():
 
     while True:
 
-        pokemon_list_object = get_data(f"https://pokeapi.co/api/v2/pokemon?offset={pokedex.o_count}&limit="
-                                       f"{pokedex.d_limit}")
-
         game_screen.screen.fill(thistle_green)
 
         game_screen.screen.blit(header_text, ((game_screen.width - header_text.get_width()) / 2, 0))
@@ -371,8 +368,11 @@ def pokemon_search():
         pokemon_name_height = game_screen.height * 0.13
         multi_factor = 1
         pokedex.d_count = 0
-        for poke in pokemon_list_object["results"]:
 
+        for poke in pokeAPI_master_list[pokedex.o_count:]:
+
+            create_onscreen_text(sml_med_font, black, f"#{poke['dex']}", game_screen.width / 4.7,
+                                 pokemon_name_height * multi_factor)
             poke_button = create_text_button(sml_med_font, white, f"{poke['name']}", game_screen.width / 3.5,
                                              pokemon_name_height * multi_factor, blackish, black, False)
             if poke_button:
@@ -392,18 +392,6 @@ def pokemon_search():
             if pokedex.o_count < 0:
                 pokedex.o_count = 0
 
-        resize_button = create_text_button(sml_med_font, thunderbird_red, "Resize", game_screen.width / 90,
-                                           game_screen.height * 0.90, blackish, black, False)
-
-        if resize_button:
-            game_screen.resize_screen()
-
-        randomize_button = create_text_button(sml_med_font, thunderbird_red, "Randomize", game_screen.width / 90,
-                                              game_screen.height * 0, blackish, black, False)
-
-        if randomize_button:
-            pokemon_display('random')
-
         next_button = create_text_button(medium_font, white, "Next", game_screen.width * .82,
                                          game_screen.height * 0.78, (0, 200, 0), green, False)
 
@@ -415,6 +403,18 @@ def pokemon_search():
 
         if music_toggle:
             music_object.music_toggle()
+
+        resize_button = create_text_button(sml_med_font, thunderbird_red, "Resize", game_screen.width / 90,
+                                           game_screen.height * 0.90, blackish, black, False)
+
+        if resize_button:
+            game_screen.resize_screen()
+
+        randomize_button = create_text_button(sml_med_font, thunderbird_red, "Randomize", game_screen.width / 90,
+                                              game_screen.height * 0, blackish, black, False)
+
+        if randomize_button:
+            pokemon_display('random')
 
         options_button = create_text_button(medium_font, white, "Options Menu", game_screen.width * .775, 0,
                                             (0, 200, 0), green, False)
@@ -434,10 +434,12 @@ def pokemon_search():
                 if search_active:
                     if evnt.key == pygame.K_BACKSPACE:
                         offset_choice = offset_choice[:-1]
+                        offset_num = int(offset_choice) if not ValueError else 0
+                        pokedex.o_count = offset_num
                     else:
                         numbers = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6,
                                    pygame.K_7, pygame.K_8, pygame.K_9]
-                        if len(offset_choice) > 12:
+                        if len(offset_choice) >= 4:
                             pass
                         elif evnt.key in numbers:
                             offset_choice += evnt.unicode
