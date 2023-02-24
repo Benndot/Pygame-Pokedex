@@ -22,7 +22,8 @@ class MusicSettings:
     spooky_song = "audio/Pokemon BlueRed - Lavender Town.mp3"
     current_track_index = 0
     tracklist = ["audio/Pokemon Ruby- Littleroot Town.mp3", "audio/Pokemon Ruby- Route 101.mp3",
-                 "audio/Pokemon Ruby- Route 104.mp3"]
+                 "audio/Pokemon Ruby- Route 104.mp3", "audio/Pokemon HGSS - Violet City theme.mp3",
+                 "audio/Pokemon HGSS - Global Terminal Theme.mp3"]
 
     def music_toggle(self):
         print("The music pausing bool has been toggled")
@@ -302,7 +303,7 @@ def options_menu():
         current_track_name = music_object.tracklist[music_object.current_track_index][6:-4] if \
             music_object.current_track_index != 13 else "    ????????????????????"
         current_track_text = small_font.render(f'Current Track: ' + current_track_name, True, blackish)
-        game_screen.screen.blit(current_track_text, (game_screen.width / 2.8, game_screen.height / 1.6))
+        game_screen.screen.blit(current_track_text, (game_screen.width / 2.9, game_screen.height / 1.6))
 
         # Return to start menu button
         return_button = create_text_button(medium_font, white, "Return To Start", game_screen.width / 2,
