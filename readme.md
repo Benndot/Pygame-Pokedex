@@ -98,9 +98,8 @@ Find a way to allow the user to filter through the list of Pokemon
 
 Makeover the UI to be less horribly ugly
 
-remove remaining unsupported characters in pokedex flavour-text entries
-
-better navigation between pages
+Finding a comprehensive way to get the correct flavour text for each pokemon to display for their entry 
+(aka english and with only supported characters)
 
 since API doesn't change very often, probably should just grab the Pokemon list data instead of making more and more
 call to it. Maybe even save searches to a file that can be re-accessed without the internet later

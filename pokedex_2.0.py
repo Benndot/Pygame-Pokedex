@@ -464,8 +464,6 @@ def pokemon_display(url):
     screen_background_image_file = io.BytesIO(screen_background_image_url)
     screen_background_image = pygame.image.load(screen_background_image_file)
 
-    print(screen_background_image.get_width(), screen_background_image.get_height())
-
     # Scales the start screen image to the screen size
     poke_photo = pygame.transform.scale(screen_background_image, (game_screen.width / 2.5,
                                                                   game_screen.width / 2.5))
@@ -629,13 +627,14 @@ if __name__ == "__main__":
 
     # you can access PokeAPI both by the Pokemon species' name and by their national Pokédex number
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
-    # print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0]['flavor_text'])
     # print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"])
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"][0]['stat']['name'])
     # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
 
     # pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
     # print(pokemon_list_object2["next"])
+
+    # pokemon_list_object2 = get_data(f"https://pokeapi.co/api/v2/pokemon?offset=1280&limit="
+    #                                 f"{pokedex.d_limit}")["count"]
 
     main()
