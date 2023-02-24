@@ -1,5 +1,6 @@
 import math
 import random
+import re
 import pygame
 from pygame import mixer
 import sys
@@ -346,10 +347,14 @@ def pokemon_search():
     header_text = large_font.render("Pokedex Search", True, black)
 
     offset_choice_label = medium_font.render("Skip to dex number", True, white)
-
     offset_choice = ""  # Empty string that will take the user's input
+    index_search_active: bool = False
 
-    search_active: bool = False
+    # search_box_label = medium_font.render("Search by name", True, white)
+    #
+    # search_string = ""  # Empty string that will take the user's input
+    #
+    # search_active: bool = False
 
     while True:
 
@@ -428,10 +433,10 @@ def pokemon_search():
                 sys.exit()
             if evnt.type == pygame.MOUSEBUTTONDOWN:
                 if search_border.collidepoint(evnt.pos):
-                    search_active = not search_active
+                    index_search_active = not index_search_active
 
             if evnt.type == pygame.KEYDOWN:
-                if search_active:
+                if index_search_active:
                     if evnt.key == pygame.K_BACKSPACE:
                         offset_choice = offset_choice[:-1]
                         offset_num = int(offset_choice) if not ValueError else 0
@@ -446,7 +451,9 @@ def pokemon_search():
                             offset_num = int(offset_choice)
                             pokedex.o_count = offset_num
 
-        if search_active:
+        # Rendering the search bars to the screens
+
+        if index_search_active:
             pygame.draw.rect(game_screen.screen, white, search_border, 2)
         else:
             pygame.draw.rect(game_screen.screen, slategray, search_border, 2)
