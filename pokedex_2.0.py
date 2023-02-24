@@ -152,6 +152,26 @@ thistle_green = (210, 210, 190)
 black = (0, 0, 0)
 
 
+def create_master_list():
+
+    master_list = []
+
+    api_list_size = get_data(f"https://pokeapi.co/api/v2/pokemon?offset=1280&limit="
+                             f"{pokedex.d_limit}")["count"]
+
+    api_pokemon_list = get_data(f"https://pokeapi.co/api/v2/pokemon?offset=0&limit={api_list_size}")["results"]
+
+    for index, entry in enumerate(api_pokemon_list, 1):
+        entry["dex"] = index
+        master_list.append(entry)
+
+    return master_list
+
+
+pokeAPI_master_list = create_master_list()
+print(pokeAPI_master_list)
+
+
 def create_onscreen_text(font_size, color, message, x, y,):
 
     text = font_size.render(message, True, color)
@@ -633,8 +653,5 @@ if __name__ == "__main__":
 
     # pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
     # print(pokemon_list_object2["next"])
-
-    # pokemon_list_object2 = get_data(f"https://pokeapi.co/api/v2/pokemon?offset=1280&limit="
-    #                                 f"{pokedex.d_limit}")["count"]
 
     main()
