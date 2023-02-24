@@ -349,11 +349,9 @@ def pokemon_search():
     offset_choice = ""  # Empty string that will take the user's input
     index_search_active: bool = False
 
-    # search_box_label = medium_font.render("Search by name", True, white)
-    #
-    # search_string = ""  # Empty string that will take the user's input
-    #
-    # search_active: bool = False
+    text_search_label = medium_font.render("Search by name", True, white)
+    text_search_string = ""  # Empty string that will take the user's input
+    text_search_active: bool = False
 
     while True:
 
@@ -361,13 +359,26 @@ def pokemon_search():
 
         game_screen.screen.blit(header_text, ((game_screen.width - header_text.get_width()) / 2, 0))
 
-        # Establishing the user input text and the border box that will surround it
-        search_surface = medium_font.render(offset_choice, True, black)
-        search_x = (game_screen.width - search_surface.get_width()) * 0.95
-        search_y = game_screen.height * .33
-        game_screen.screen.blit(offset_choice_label, (game_screen.width * 0.7, search_y - 60))
-        search_border = pygame.Rect(search_x - 10, search_y, search_surface.get_width() + 10, 50)
-        game_screen.screen.blit(search_surface, (search_x, search_y))
+        # Establishing the user inputs for text and indexes and the border boxes that will surround them
+
+        index_search_surface = medium_font.render(offset_choice, True, black)
+        text_search_surface = medium_font.render(text_search_string, True, black)
+
+        index_search_x = (game_screen.width - index_search_surface.get_width()) * 0.95
+        index_search_y = game_screen.height * .33
+        text_search_x = (game_screen.width - text_search_surface.get_width()) * 0.95
+        text_search_y = game_screen.height * .66
+
+        game_screen.screen.blit(index_search_surface, (index_search_x, index_search_y))
+        game_screen.screen.blit(text_search_surface, (text_search_x, text_search_y))
+
+        game_screen.screen.blit(offset_choice_label, (game_screen.width * 0.7, index_search_y * 0.8))
+        game_screen.screen.blit(text_search_label, (game_screen.width * 0.7, text_search_y * 0.8))
+
+        index_search_border = pygame.Rect(index_search_x - (game_screen.height / 72), index_search_y,
+                                          index_search_surface.get_width() + (game_screen.height / 72), 50)
+        text_search_border = pygame.Rect(text_search_x - (game_screen.height / 72), text_search_y,
+                                         text_search_surface.get_width() + (game_screen.height / 72), 50)
 
         pokemon_name_height = game_screen.height * 0.13
         multi_factor = 1
@@ -431,10 +442,17 @@ def pokemon_search():
                 pygame.quit()
                 sys.exit()
             if evnt.type == pygame.MOUSEBUTTONDOWN:
-                if search_border.collidepoint(evnt.pos):
+                if index_search_border.collidepoint(evnt.pos):
                     index_search_active = not index_search_active
+                    if index_search_active and text_search_active:
+                        text_search_active = not text_search_active
+                if text_search_border.collidepoint(evnt.pos):
+                    text_search_active = not text_search_active
+                    if text_search_active and index_search_active:
+                        index_search_active = not index_search_active
 
             if evnt.type == pygame.KEYDOWN:
+
                 if index_search_active:
                     if evnt.key == pygame.K_BACKSPACE:
                         offset_choice = offset_choice[:-1]
@@ -450,12 +468,26 @@ def pokemon_search():
                             offset_num = int(offset_choice)
                             pokedex.o_count = offset_num - 1 if offset_num - 1 >= 0 else 0
 
+                if text_search_active:
+                    if evnt.key == pygame.K_BACKSPACE:
+                        text_search_string = text_search_string[:-1]
+                    else:
+                        if len(text_search_string) >= 15:
+                            pass
+                        else:
+                            text_search_string += evnt.unicode
+
         # Rendering the search bars to the screens
 
         if index_search_active:
-            pygame.draw.rect(game_screen.screen, white, search_border, 2)
+            pygame.draw.rect(game_screen.screen, white, index_search_border, 2)
         else:
-            pygame.draw.rect(game_screen.screen, slategray, search_border, 2)
+            pygame.draw.rect(game_screen.screen, slategray, index_search_border, 2)
+
+        if text_search_active:
+            pygame.draw.rect(game_screen.screen, white, text_search_border, 2)
+        else:
+            pygame.draw.rect(game_screen.screen, slategray, text_search_border, 2)
 
         pygame.display.update()
         clock.tick(15)
