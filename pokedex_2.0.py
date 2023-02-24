@@ -1,6 +1,6 @@
 import math
 import random
-import re
+# import re
 import pygame
 from pygame import mixer
 import sys
@@ -171,7 +171,6 @@ def create_master_list():
 
 
 pokeAPI_master_list = create_master_list()
-print(pokeAPI_master_list)
 
 
 def create_onscreen_text(font_size, color, message, x, y,):
@@ -439,8 +438,8 @@ def pokemon_search():
                 if index_search_active:
                     if evnt.key == pygame.K_BACKSPACE:
                         offset_choice = offset_choice[:-1]
-                        offset_num = int(offset_choice) if not ValueError else 0
-                        pokedex.o_count = offset_num
+                        offset_num = int(offset_choice) if len(offset_choice) >= 1 else 0
+                        pokedex.o_count = offset_num - 1 if offset_num - 1 >= 0 else 0
                     else:
                         numbers = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6,
                                    pygame.K_7, pygame.K_8, pygame.K_9]
@@ -449,7 +448,7 @@ def pokemon_search():
                         elif evnt.key in numbers:
                             offset_choice += evnt.unicode
                             offset_num = int(offset_choice)
-                            pokedex.o_count = offset_num
+                            pokedex.o_count = offset_num - 1 if offset_num - 1 >= 0 else 0
 
         # Rendering the search bars to the screens
 
