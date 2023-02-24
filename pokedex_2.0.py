@@ -11,6 +11,9 @@ pygame.init()
 
 clock = pygame.time.Clock()
 
+# ---------------------------------------------------------------------------------------------------------------------=
+# Gameplay objects
+
 
 class MusicSettings:
 
@@ -119,6 +122,10 @@ current_pokemon = CurrentPokemon(-1, "Placeholder", CurrentPokemon.substitute_im
                                   ["speed", "spd", -1]], CurrentPokemon.placeholder_entry)
 
 
+# ---------------------------------------------------------------------------------------------------------------------=
+# Utility functions and global variables
+
+
 def get_data(api_url):
     response = requests.get(api_url)
     if response.status_code == 200:
@@ -188,6 +195,10 @@ def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_
         pygame.draw.rect(game_screen.screen, default_color, (x, y, button_width, button_height))
 
     game_screen.screen.blit(button_msg, (x + button_width / 10, y + button_height / 10))
+
+
+# ---------------------------------------------------------------------------------------------------------------------=
+# Gameplay functions
 
 
 def start_screen():
