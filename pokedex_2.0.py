@@ -1,6 +1,6 @@
 import math
 import random
-# import re
+import re
 import pygame
 from pygame import mixer
 import sys
@@ -367,34 +367,42 @@ def pokemon_search():
         index_search_x = (game_screen.width - index_search_surface.get_width()) * 0.95
         index_search_y = game_screen.height * .33
         text_search_x = (game_screen.width - text_search_surface.get_width()) * 0.95
-        text_search_y = game_screen.height * .66
+        text_search_y = game_screen.height * .60
 
         game_screen.screen.blit(index_search_surface, (index_search_x, index_search_y))
         game_screen.screen.blit(text_search_surface, (text_search_x, text_search_y))
 
         game_screen.screen.blit(offset_choice_label, (game_screen.width * 0.7, index_search_y * 0.8))
-        game_screen.screen.blit(text_search_label, (game_screen.width * 0.7, text_search_y * 0.8))
+        game_screen.screen.blit(text_search_label, (game_screen.width * 0.7, text_search_y * 0.9))
 
         index_search_border = pygame.Rect(index_search_x - (game_screen.height / 72), index_search_y,
                                           index_search_surface.get_width() + (game_screen.height / 72), 50)
         text_search_border = pygame.Rect(text_search_x - (game_screen.height / 72), text_search_y,
                                          text_search_surface.get_width() + (game_screen.height / 72), 50)
 
+        master_list_matches: list = []  # Will contain all regex matches
+
+        search_pattern = re.compile(text_search_string, re.IGNORECASE)
+        for poke in pokeAPI_master_list:
+            search_bool = search_pattern.search(poke["name"])
+            if search_bool:
+                master_list_matches.append(poke)
+
         pokemon_name_height = game_screen.height * 0.13
-        multi_factor = 1
+        height_multi_factor = 1
         pokedex.d_count = 0
 
-        for poke in pokeAPI_master_list[pokedex.o_count:]:
+        for poke in master_list_matches[pokedex.o_count:]:
 
             create_onscreen_text(sml_med_font, black, f"#{poke['dex']}", game_screen.width / 4.7,
-                                 pokemon_name_height * multi_factor)
+                                 pokemon_name_height * height_multi_factor)
             poke_button = create_text_button(sml_med_font, white, f"{poke['name']}", game_screen.width / 3.5,
-                                             pokemon_name_height * multi_factor, blackish, black, False)
+                                             pokemon_name_height * height_multi_factor, blackish, black, False)
             if poke_button:
                 pokemon_display(poke['url'])
 
             pokedex.d_count += 1
-            multi_factor += 0.72
+            height_multi_factor += 0.72
 
             if pokedex.d_count >= pokedex.d_limit:
                 break
@@ -450,6 +458,8 @@ def pokemon_search():
                     text_search_active = not text_search_active
                     if text_search_active and index_search_active:
                         index_search_active = not index_search_active
+                        offset_choice = ""
+                        pokedex.o_count = 0
 
             if evnt.type == pygame.KEYDOWN:
 

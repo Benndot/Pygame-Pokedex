@@ -94,13 +94,10 @@ page 2, 3, so on. Just looks weird and requires a button press to get back on tr
 
 ### pokeAPI todos
 
-Find a way to allow the user to filter through the list of Pokemon
-
 Makeover the UI to be less horribly ugly
 
 Finding a comprehensive way to get the correct flavour text for each pokemon to display for their entry 
 (aka english and with only supported characters)
 
-since API doesn't change very often, probably should just grab the Pokemon list data instead of making more and more
-call to it. Maybe save pokemon master list to a file that updates itself every once in a while based on datetime
+Maybe save pokemon master list to a file that updates itself every once in a while based on datetime
 
