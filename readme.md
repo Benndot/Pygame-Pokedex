@@ -101,3 +101,16 @@ Finding a comprehensive way to get the correct flavour text for each pokemon to 
 
 Maybe save pokemon master list to a file that updates itself every once in a while based on datetime
 
+### PokeAPI references (for myself)
+
+some useful extensions to remind myself how the pokeAPI works and how to work with it in Python:
+
+you can access PokeAPI both by the Pokemon species' name and by their national Pokédex number
+print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
+print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0])
+print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"])
+print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
+
+pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
+print(pokemon_list_object2["next"])
+

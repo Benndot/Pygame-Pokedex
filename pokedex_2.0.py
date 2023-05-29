@@ -11,6 +11,10 @@ import music_settings
 
 pygame.init()
 
+pygame.display.set_caption("Benndot's Python Pokedex")
+window_icon = pygame.image.load("pokePics/pokeball2.png")
+pygame.display.set_icon(window_icon)
+
 clock = pygame.time.Clock()
 
 # ---------------------------------------------------------------------------------------------------------------------=
@@ -185,8 +189,6 @@ def create_text_button(font_choice, text_color, msg, x, y, hover_color, default_
 
 def start_screen():
 
-    start_text = medium_font.render("The Pygame Pokedex", True, white)
-
     top_bar_height = 70
 
     title_photo = pygame.image.load("pokePics/pokedex-spooky.jpg")
@@ -196,7 +198,9 @@ def start_screen():
 
     while True:
         game_screen.screen.fill((0, 0, 200))
-        game_screen.screen.blit(start_text, ((game_screen.width - start_text.get_width()) / 2, game_screen.height / 65))
+
+        create_onscreen_text(medium_font, white, "The Pygame Pokedex", game_screen.width / 2,
+                             game_screen.height * 0.015, True)
 
         menu_button = create_text_button(small_font, blackish, "Open Menu", game_screen.width * .9,
                                          game_screen.height * 0.03, lightgray, slategray, True)
@@ -234,11 +238,10 @@ def start_screen():
 
 def options_menu():
 
-    title_text = large_font.render("Options Menu", True, blackish)
-
     while True:
         game_screen.screen.fill(thistle_green)
-        game_screen.screen.blit(title_text, ((game_screen.width - title_text.get_width()) / 2, 0))
+
+        create_onscreen_text(large_font, blackish, "Music Options", game_screen.width / 2, 0, True)
 
         music_button = create_text_button(medium_font, white, "Toggle Music", game_screen.width / 1.97,
                                           game_screen.height / 6.5, lightgray, slategray, True)
@@ -304,8 +307,6 @@ def options_menu():
 
 def pokemon_search():
 
-    header_text = large_font.render("Pokedex Search", True, black)
-
     offset_choice_label = medium_font.render("Skip to dex number", True, white)
     offset_choice = ""  # Empty string that will take the user's input
     index_search_active: bool = False
@@ -318,7 +319,7 @@ def pokemon_search():
 
         game_screen.screen.fill(thistle_green)
 
-        game_screen.screen.blit(header_text, ((game_screen.width - header_text.get_width()) / 2, 0))
+        create_onscreen_text(large_font, black, "Pokedex Search", game_screen.width / 2, 0, True)
 
         # Establishing the user inputs for text and indexes and the border boxes that will surround them
 
@@ -488,7 +489,6 @@ def pokemon_display(url):
     except TypeError:
         print("There was an error, deploying placeholders")
 
-    pkmn_name_text = large_font.render(f"#{current_pokemon.dex_no}. {current_pokemon.name}", True, white)
     pkmn_type1_text = intermediate_font.render(f"Type 1:    {current_pokemon.type1}", True, white)
     pkmn_type2_text = intermediate_font.render(f"Type 2:    {current_pokemon.type2}", True, white)
 
@@ -504,8 +504,8 @@ def pokemon_display(url):
 
         game_screen.screen.fill(slategray)
 
-        game_screen.screen.blit(pkmn_name_text, ((game_screen.width - pkmn_name_text.get_width()) / 2,
-                                                 game_screen.height / 30))
+        create_onscreen_text(large_font, white, f"#{current_pokemon.dex_no}. {current_pokemon.name}",
+                             game_screen.width / 2, game_screen.height / 30, True)
 
         create_onscreen_text(medium_font, black, "Base Stats", game_screen.width * 0.02, game_screen.height * 0.002)
         create_onscreen_text(medium_font, black, "_________", game_screen.width * 0.02, game_screen.height * 0.006)
@@ -656,14 +656,5 @@ def main():
 
 
 if __name__ == "__main__":
-
-    # you can access PokeAPI both by the Pokemon species' name and by their national Pokédex number
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee").keys())
-    # print(get_data("https://pokeapi.co/api/v2/pokemon-species/21")['flavor_text_entries'][0])
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/eevee")["stats"])
-    # print(get_data("https://pokeapi.co/api/v2/pokemon/seedot")["types"][1]["type"]["name"])
-
-    # pokemon_list_object2 = get_data("https://pokeapi.co/api/v2/pokemon")
-    # print(pokemon_list_object2["next"])
 
     main()
