@@ -202,17 +202,16 @@ def start_screen():
         create_onscreen_text(medium_font, white, "The Pygame Pokedex", game_screen.width / 2,
                              game_screen.height * 0.015, True)
 
-        menu_button = create_text_button(small_font, blackish, "Open Menu", game_screen.width * .9,
-                                         game_screen.height * 0.03, lightgray, slategray, True)
+        dex_button = create_text_button(small_font, blackish, "Open Dex", game_screen.width * .78,
+                                        game_screen.height * 0.03, lightgray, slategray, True)
 
-        if menu_button:
+        if dex_button:
             pokemon_search()
-            # return
 
-        music_button = create_text_button(small_font, blackish, "Toggle Music", game_screen.width * .78,
+        music_toggle = create_text_button(small_font, blackish, "Toggle Music", game_screen.width * .9,
                                           game_screen.height * 0.03, lightgray, slategray, True)
 
-        if music_button:
+        if music_toggle:
             music_object.music_toggle()
 
         ghost_button = create_transparent_button(250, 100, game_screen.width / 1.75, game_screen.height / 2.8)
@@ -236,7 +235,7 @@ def start_screen():
         return True
 
 
-def options_menu():
+def music_options():
 
     while True:
         game_screen.screen.fill(thistle_green)
@@ -401,11 +400,11 @@ def pokemon_search():
         if randomize_button:
             pokemon_display('random')
 
-        options_button = create_text_button(medium_font, white, "Options Menu", game_screen.width * .775, 0,
+        options_button = create_text_button(medium_font, white, "Music Options", game_screen.width * .775, 0,
                                             (0, 200, 0), green, False)
 
         if options_button:
-            options_menu()
+            music_options()
 
         for evnt in pygame.event.get():
             if evnt.type == pygame.QUIT:

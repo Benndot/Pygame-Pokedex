@@ -6,18 +6,39 @@ This project is my return to Pygame a little over a year after my first attempts
 something a bit more ambitious now that I know a lot more about programming, and have the tools necessary to create 
 some cooler stuff without being railroaded by tutorials. This is the result, so far. 
 
+The First version of this project (1.2.1), which is still included in this project, was more of a structural prototype.
+I wanted to create the interface, and didn't really care about having more than a few species to show off. 
+However, soon after I reached my goals with it, I got the urge to expand on it. 
+
 ## The pokeAPI Pokedex (aka pokedex_2.0.py)
 
-This is a rebuild / improved sequel to my first Pokedex and the main file of this project. 
-
-The 1.0 (which is still included in this project, was more of a structural prototype. I didn't really care about having 
-all the data, I just wanted to create a demo pokedex with a handful of Pokemon. But soon after I reached my goals with
-that original, I got the urge to expand it so that's what I did. 
-
-I didn't know for sure, but I strongly suspected that there would be a good Pokemon-themed API and there was. This 
-project is powered by pokeAPI, so all credits to them. If they ever go offline, this program (at least as it is
+This project is powered by pokeAPI, so all credits to them. If they ever go offline, this program (at least as it is
 designed today) does as well. With it, I have created a Pokedex that can access the data of every existing Pokemon
 and display each species' data in dynamic pages, complete with its name, image, base stats, typing and dex entry.
+
+The interface and structure of the program is very similar to the 1.0 version. There's a relatively simple title page
+that allows the user to toggle the music on and off and enter the pokedex proper. 
+
+The search menu is where the real content is. From there, the user will be greeted with a list of Pokemon species
+buttons running down the center of the screen. It will be begin at national dex number 1, but pages can be cycled 
+through to eventually reach any Pokemon. To speed up a search, an input for a specific dex number and an input to filter
+results based on the species name are offered on the screen's right. At the top right, the user can choose to press the
+"randomize" button to land on the page of a randomly selected Pokemon.
+
+When a pokemon's button is clicked (or the user chose randomized), they are brought to the species' data page. There, 
+an image of the pokemon is generated, along with a header containing its name and number. Its typing will be displayed
+towards the bottom and its base stats are displayed to the left. Pressing the entry button on the right, will display
+a sub-page that will display the Pokemon's "flavour text" (aka a short blurb describing the species behaviour, 
+appearance, lore, etc).
+
+The program has a musical backdrop consisting of a handful of lighthearted tracks from the games that fit the vibe of a
+laidback digital encyclopedia. Which song plays to begin with is random, but all songs can be cycled through in the 
+options menu. The options menu also offers the ability to change the music's volume or pause it entirely.
+
+The resize button throughout the app allows the user to cycle through 3 different sizes of display for the window. Not
+everything has been perfectly scaled in the code, but it generally works well. 
+
+This program has an "eerie" easter egg that shouldn't be too hard to find. 
 
 ## The Pokedex 1.2.1 
 
@@ -42,10 +63,8 @@ Version 1.2.1 adds the following:
 
 #### Features (Pokedex 1.0)
 
-This program functions more-or-less like Pokedex from the Pokemon games and anime. 
-
-It has a start screen acting as a faux Pokedex cover that then navigates to a menu that acts as an intermediary 
-that can take you both to the real Pokedex search pages and the options
+This program is largely similar in function and appearance to the 2.0 version, but the pokemon data it uses is hard 
+coded and more limited.
 
 In the Pokemon search pages, you get a list of Pokemon by their number. Currently it's not their actual Pokedex number,
 but the sequence in which I added them into the program. Each name is also a button that can be clicked to take you
@@ -57,13 +76,7 @@ right of the page is a button to return to the navigation menu and another to cy
 
 The Pokemon species' data pages are dynamic and include their species' name, an image, and their typing. Additionally,
 for certain species' who have alternative forms (mega evolutions, gigantamax, etc), there is a gallery button that 
-cycles through each one. 
-
-The program has a musical backdrop consisting of a handful of lighthearted tracks from the games. Which song plays 
-to begin with is random, but can be cycled through in the options menu. The options menu also offers the ability to
-change the music's volume or pause it entirely.
-
-Finally, I have included a spooky easter egg. Shouldn't be too hard to find.
+cycles through each one.
 
 ### Documentation
 
@@ -71,29 +84,12 @@ FUNCTION create_text_button
 
 x_adjusted: Takes a boolean value. If True, it will adjust the X position of the button given to take into account
 the size (width) of the button. For example, if one were to give it an X value of screen_width/2, with the adjustment
-the button will end up perfectly centered on the screen. 
+the button will end up perfectly centered on the screen.
 
-### Pokedex 1.0 Todo List / Current Issues / Goals
+### pokedex 2.0 todos
 
-Feature: I want to be able to filter the dex list based on pokemon type.
+Make Pokemon entry box width dynamic based on maximum line length
 
-Feature: I would like to add relational data. Like bridges to pre-evolutions and successive forms. Also bridges to 
-regional variants.
+Save pokemon master list to a file (shelve) that updates itself every once in a while based on datetime
 
-Feature: Create an options object class to handle all option variables so that globals need not be used.
-
-Feature: Try to remove as many absolute measurements as possible. It would be cool to have the program be able to scale
-to different screen sizes eventually.
-
-Bug: Better align name text in the pokedex search page. The longer the name, the more unaligned proportions become.
-On a related note, to partially fix the problem, I would like to remove the regional variant declaration in Pokemon's
-names and move them to a variable or something that I can add in as text next to the button. 
-
-Bug: I would like to reset the lists before text filters so that the pages don't disappear if you start filtering on
-page 2, 3, so on. Just looks weird and requires a button press to get back on track.
-
-### pokeAPI todos
-
-Makeover the UI to be less horribly ugly
-
-Maybe save pokemon master list to a file that updates itself every once in a while based on datetime
+Polish UI
