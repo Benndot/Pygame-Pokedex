@@ -40,28 +40,7 @@ everything has been perfectly scaled in the code, but it generally works well.
 
 This program has an "eerie" easter egg that shouldn't be too hard to find. 
 
-## The Pokedex 1.2.1 
-
-The focus on this project so far has centered around creating a "pokedex" out of the pygame window. Dynamically 
-generating lists of Pokemon species and then displaying pages of their information and likeness when the names are
-selected.
-
-This is 1.2.0-ish version of this program, with a bunch of small tweaks including:
-    -Better placement of buttons, visual elements, use of colors
-    -No longer resets to start with every return button (aka better navigation between screens)
-    -Incorporation of music and controls for the music (Muting, Pausing, Track Changes)
-    -A gallery button in the species display to show alternate forms of Pokemon (assuming they have at least one)
-    -Conditional text that labels what those alternate forms are
-    -An easter egg 
-    -Improved language in the code itself for improved readability
-
-Version 1.2.1 adds the following:
-    -Switches from a "BUTTONMOUSEUP" button clicking system to "BUTTONMOUSEDOWN" in order to finally fix the 
-    "clicking through screens" glitch that was plaguing this project. 
-    -Some cleaned up code, deletion of an old, now unneeded button function
-    -Slightly improved UI, including a re-arranged options menu and slightly larger "small font" text
-
-#### Features (Pokedex 1.0)
+## The Pokedex 1.2.1 (old_pokedex.py)
 
 This program is largely similar in function and appearance to the 2.0 version, but the pokemon data it uses is hard 
 coded and more limited.
