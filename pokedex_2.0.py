@@ -606,10 +606,10 @@ def pokemon_entry(dex_id: int):
 
         base_height = game_screen.height * 0.65 if len(current_pokemon.dex_entry) <= 150 else game_screen.height * 0.60
 
-        box_height = game_screen.height * 0.25 if len(current_pokemon.dex_entry) < 120 else game_screen.height * 0.32 \
-            if 120 <= len(current_pokemon.dex_entry) <= 150 else game_screen.height * 0.38
+        box_height = game_screen.height * 0.25 if len(current_pokemon.dex_entry) <= 120 else game_screen.height * 0.32 \
+            if 120 < len(current_pokemon.dex_entry) <= 150 else game_screen.height * 0.38
         entry_rect = pygame.Rect(game_screen.width * 0.25, base_height * 0.98,
-                                 game_screen.width * 0.5, box_height)
+                                 game_screen.width * 0.52, box_height)
         pygame.draw.rect(game_screen.screen, black, entry_rect, 2)
 
         # Pokédex's entry display code block below
@@ -620,7 +620,7 @@ def pokemon_entry(dex_id: int):
         index_counter = 0
         for index, char in enumerate(current_pokemon.dex_entry):
             index_counter += 1
-            if char == " " and index_counter >= 35:
+            if char == " " and index_counter >= 37:
                 end_index = index + 1
                 create_onscreen_text(sml_med_font, black,
                                      current_pokemon.dex_entry[line_start_index+1 if line_start_index != 0 else
