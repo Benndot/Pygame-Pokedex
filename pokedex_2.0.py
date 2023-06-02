@@ -469,7 +469,7 @@ def pokemon_display(url):
     top_bar_height = game_screen.height / 10
 
     if url == "random":
-        random_pokemon_index = random.randint(1, 800)
+        random_pokemon_index = random.randint(1, 1000)
         url = f"https://pokeapi.co/api/v2/pokemon/{random_pokemon_index}"
 
     try:
@@ -487,9 +487,6 @@ def pokemon_display(url):
 
     except TypeError:
         print("There was an error, deploying placeholders")
-
-    pkmn_type1_text = intermediate_font.render(f"Type 1:    {current_pokemon.type1}", True, white)
-    pkmn_type2_text = intermediate_font.render(f"Type 2:    {current_pokemon.type2}", True, white)
 
     screen_background_image_url = urlopen(current_pokemon.image_url).read()
     screen_background_image_file = io.BytesIO(screen_background_image_url)
@@ -518,11 +515,10 @@ def pokemon_display(url):
         game_screen.screen.blit(poke_photo, ((game_screen.width - poke_photo.get_width()) / 2,
                                              top_bar_height * 1.1))
 
-        game_screen.screen.blit(pkmn_type1_text, ((game_screen.width - pkmn_type1_text.get_width()) / 2,
-                                                  game_screen.height * 0.7))
-
-        game_screen.screen.blit(pkmn_type2_text, ((game_screen.width - pkmn_type1_text.get_width()) / 2,
-                                                  game_screen.height * 0.8))
+        create_onscreen_text(intermediate_font, white, f"Type 1:    {current_pokemon.type1}", game_screen.width / 2,
+                             game_screen.height * 0.7, True)
+        create_onscreen_text(intermediate_font, white, f"Type 2:    {current_pokemon.type2}", game_screen.width / 2,
+                             game_screen.height * 0.8, True)
 
         resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.width / 90,
                                            game_screen.height * 0.85, blackish, black, False)
@@ -570,6 +566,8 @@ def pokemon_entry(dex_id: int):
                 break
 
         current_pokemon.dex_entry = current_pokemon.dex_entry.replace("\n", " ").replace("\x0c", " ")
+        if len(current_pokemon.dex_entry) > 200:
+            current_pokemon.dex_entry = current_pokemon.dex_entry[:200]
         print(current_pokemon.dex_entry)
         print(len(current_pokemon.dex_entry))
 
@@ -596,27 +594,24 @@ def pokemon_entry(dex_id: int):
                                  game_screen.height * 0.08 * stat_height_multiplier)
             stat_height_multiplier += 1
 
+        create_onscreen_text(medium_font, white, f"Type 1:    {current_pokemon.type1}", game_screen.width * 0.70,
+                             game_screen.height * 0.3)
+        create_onscreen_text(medium_font, white, f"Type 2:    {current_pokemon.type2}", game_screen.width * 0.70,
+                             game_screen.height * 0.4)
+
         # Defining and blitting the Pokemon's image to the screen
         scaled_poke_photo = pygame.transform.scale(pokemon_image, (game_screen.width / 2.8, game_screen.width / 2.8))
         game_screen.screen.blit(scaled_poke_photo, ((game_screen.width - scaled_poke_photo.get_width()) / 2,
                                                     game_screen.height / 10 * 1.1))
 
-        # Drawing the Pokédex entry box
-
-        base_height = game_screen.height * 0.65 if len(current_pokemon.dex_entry) <= 150 else game_screen.height * 0.60
-
-        box_height = game_screen.height * 0.25 if len(current_pokemon.dex_entry) <= 120 else game_screen.height * 0.32 \
-            if 120 < len(current_pokemon.dex_entry) <= 150 else game_screen.height * 0.38
-        entry_rect = pygame.Rect(game_screen.width * 0.25, base_height * 0.98,
-                                 game_screen.width * 0.52, box_height)
-        pygame.draw.rect(game_screen.screen, black, entry_rect, 2)
-
         # Pokédex's entry display code block below
+        base_height = game_screen.height * 0.65 if len(current_pokemon.dex_entry) <= 150 else game_screen.height * 0.60
         entry_start_x = game_screen.width / 3.5
 
         line_start_index = 0  # Will change with each new line
         height_offset = 1
         index_counter = 0
+        max_index_length = 0
         for index, char in enumerate(current_pokemon.dex_entry):
             index_counter += 1
             if char == " " and index_counter >= 37:
@@ -627,11 +622,23 @@ def pokemon_entry(dex_id: int):
                                      entry_start_x,  base_height * height_offset)
                 height_offset += 0.12
                 line_start_index = index
+                if index_counter > max_index_length:
+                    max_index_length = index_counter
                 index_counter = 0
             if index >= len(current_pokemon.dex_entry)-1:
                 create_onscreen_text(sml_med_font, black, current_pokemon.dex_entry[line_start_index+1: -1] + ".",
                                      entry_start_x, base_height * height_offset)
                 break
+
+        # Drawing the Pokédex entry box
+        box_height = game_screen.height * 0.25 if len(
+            current_pokemon.dex_entry) <= 120 else game_screen.height * 0.32 \
+            if 120 < len(current_pokemon.dex_entry) <= 150 else game_screen.height * 0.38
+        box_width = game_screen.width * 0.48 if max_index_length <= 40 else game_screen.width * 0.54 if \
+            40 < max_index_length <= 44 else game_screen.width * 0.58
+        entry_rect = pygame.Rect(game_screen.width * 0.25, base_height * 0.98,
+                                 box_width, box_height)
+        pygame.draw.rect(game_screen.screen, black, entry_rect, 2)
 
         resize_button = create_text_button(medium_font, thunderbird_red, "Resize", game_screen.width / 90,
                                            game_screen.height * 0.85, blackish, black, False)
